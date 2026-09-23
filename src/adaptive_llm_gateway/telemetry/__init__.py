@@ -1,0 +1,1 @@
+"""Storage-independent telemetry contracts."""
