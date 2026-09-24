@@ -13,11 +13,19 @@ from .repository import BenchmarkRepository
 
 class BenchmarkRunner:
     def __init__(self, service: InferenceService, repository: BenchmarkRepository,
-                 *, configuration: dict | None = None) -> None:
+                 *, configuration: dict | None = None,
+                 output_token_overrides: dict[str, dict[str, int]] | None = None) -> None:
         # Separate orchestration instance deliberately has NO production telemetry sink.
         self.service = InferenceService(service.registry, service.resolver)
         self.repository = repository
         self.configuration = configuration or {}
+        self.output_token_overrides = output_token_overrides or {}
+        for model_id, task_limits in self.output_token_overrides.items():
+            if not model_id or not isinstance(task_limits, dict) or not task_limits:
+                raise ValueError("Output-token overrides require model and task mappings")
+            if any(not task_id or type(limit) is not int or limit <= 0
+                   for task_id, limit in task_limits.items()):
+                raise ValueError("Output-token overrides must contain positive integer limits")
 
     async def run(self, dataset: BenchmarkDataset, model_ids: list[str], *, limit: int | None = None) -> BenchmarkRun:
         if not model_ids or len(set(model_ids)) != len(model_ids):
@@ -31,6 +39,21 @@ class BenchmarkRunner:
             if not self.service.resolver.supports(model.provider):
                 raise ProviderUnavailableError("Selected benchmark adapter is unavailable")
         tasks = dataset.tasks if limit is None else dataset.tasks[:limit]
+        registered_model_ids = {model.model_id for model in self.service.registry.list_models()}
+        dataset_task_ids = {task.task_id for task in dataset.tasks}
+        unknown_models = set(self.output_token_overrides) - registered_model_ids
+        unknown_tasks = {task_id for task_limits in self.output_token_overrides.values()
+                         for task_id in task_limits} - dataset_task_ids
+        if unknown_models or unknown_tasks:
+            raise ValueError("Output-token overrides must target selected models and tasks")
+        effective_output_limits = {
+            task.task_id: {
+                model.model_id: self.output_token_overrides.get(model.model_id, {}).get(
+                    task.task_id, task.max_output_tokens)
+                for model in models
+            }
+            for task in tasks
+        }
         request_features = {
             task.task_id: extract_request_features(task).model_dump(mode="json") for task in tasks
         }
@@ -50,14 +73,16 @@ class BenchmarkRunner:
         }
         run = BenchmarkRun(dataset=dataset, dataset_sha256=dataset.sha256,
             selected_task_ids=tuple(task.task_id for task in tasks), models=models,
-            configuration={"runner_version": "1", "execution": "sequential-task-then-model",
+            configuration={**self.configuration,
+                "runner_version": "1", "execution": "sequential-task-then-model",
                 "pricing_source": PRICING_SOURCE, "pricing_verified": PRICING_VERIFIED,
                 "catalog_verified_at": CATALOG_VERIFIED_AT,
                 "upstream_allowlists": UPSTREAM_PROVIDERS,
                 "request_feature_schema_version": "1.0.0",
                 "request_features": request_features,
-                "frozen_model_configuration": frozen_models,
-                **self.configuration})
+                "effective_max_output_tokens": effective_output_limits,
+                "output_token_overrides": self.output_token_overrides,
+                "frozen_model_configuration": frozen_models})
         await self.repository.start(run)  # fail before paid calls if storage cannot be created
         try:
             for task in tasks:
@@ -65,7 +90,9 @@ class BenchmarkRunner:
                     started = perf_counter()
                     request_id = str(uuid4())
                     try:
-                        response = await self.service.generate(model.model_id, task.to_request(), request_id=request_id)
+                        request = task.to_request().model_copy(update={
+                            "max_output_tokens": effective_output_limits[task.task_id][model.model_id]})
+                        response = await self.service.generate(model.model_id, request, request_id=request_id)
                         result = BenchmarkResult(run_id=run.run_id, request_id=request_id,
                             task_id=task.task_id, model_id=model.model_id, success=True,
                             response=response, latency_ms=response.latency_ms)

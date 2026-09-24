@@ -25,6 +25,7 @@ async def test_routing_export_keeps_features_labels_and_raw_text_separate(tmp_pa
     assert row.label_status == "valid" and row.acceptable in {True, False}
     assert row.request_features.category == dataset.tasks[0].category
     assert row.candidate.reasoning_effort is None
+    assert row.effective_max_output_tokens == dataset.tasks[0].max_output_tokens
     assert row.raw_result_path.startswith("results/") and row.evaluation_path.startswith("evaluations/")
     serialized = dataset_path.read_text()
     assert dataset.tasks[0].prompt not in serialized
@@ -46,3 +47,4 @@ async def test_provider_failure_exports_missing_label_not_negative_label(tmp_pat
     assert rows[0].provider_outcome == "failure"
     assert rows[0].label_status == "missing" and rows[0].acceptable is None
     assert rows[0].missing_label_reason == "provider_failure:context_limit_exceeded"
+    assert rows[0].reasoning_tokens is None

@@ -5,7 +5,7 @@ cheaper models may be sufficient. The long-term goal is an adaptive inference
 gateway that selects the lowest-cost model predicted to satisfy a configurable
 quality requirement.
 
-**Current status: Phase 5.5B — functional coding and semantic summarization evaluation.**
+**Current status: Phase 5.5C complete by human review; Phase 6 is not implemented.**
 RouteLLM owns model definitions, explicit model selection, Decimal cost estimates,
 and PostgreSQL production telemetry. Vercel AI Gateway provides model access only.
 A separate controlled benchmark runner produces experimental artifacts, and an
@@ -579,13 +579,14 @@ Omitting either paid-judge flag fails before evaluation. Normal tests use
 invoke a judge. Functional Docker evaluation and semantic judging can be enabled
 together for one stored run.
 
-## Foundation V1 and V2
+## Foundation V1, V2, and V3
 
 Foundation V1 remains the immutable pipeline-validation dataset used by historical
-Phase 4/5 artifacts. Its 35 intentionally simple tasks and legacy evaluators retain
-their original meaning. Foundation V2 is a separate, unrun real-model dataset with
-56 original tasks: eight in each category, split into two easy, three medium, and
-three hard tasks. Difficulty comes from observable interactions, distractors,
+Phase 4/5 artifacts. Foundation V2 preserves the original 56-task benchmark, with
+eight tasks per category split into two easy, three medium, and three hard tasks.
+Foundation V3 preserves that task and evaluation content while freezing explicit
+candidate reasoning settings and capability-aware output limits for routing-data
+collection. Difficulty comes from observable interactions, distractors,
 transformations, and edge cases rather than prompt length alone.
 
 Difficulty is evaluation-only metadata. It is not copied into provider requests or
@@ -620,14 +621,13 @@ python -m adaptive_llm_gateway.benchmarks \
 python -m adaptive_llm_gateway.evaluation --run-id <offline-run-uuid>
 ```
 
-No real-model Foundation V2 benchmark or real semantic judge run has been performed.
-Request features remain unused by any router.
-
-Phase 5.5B validation: **269 passed**, including four PostgreSQL tests and the
-Docker sandbox integration cases, with the one paid test deselected. A separate
-56-task FakeProvider/FakeJudge/sandbox-fixture run fully evaluated all 56 results,
-including eight coding and eight summarization results, with zero paid calls and
-zero incomplete evaluations.
+Foundation V3 has a frozen protocol, reproducible quality evaluation, and a
+versioned routing-dataset export. Its automated review passed Criteria 1, 2, and 4
+but failed Criterion 3; the concise
+[human-review decision](benchmarks/protocols/foundation-v3-human-review.md) approves
+the frozen dataset for downstream routing analysis with explicit missing-label,
+grouped-split, and generalization limitations. Generated benchmark responses and
+routing exports remain ignored. Request features remain unused by any router.
 
 ### Offline and paid test commands
 
@@ -681,8 +681,8 @@ Phase 3 baseline was **142 passed**. Phase 4 validation: **200 passed** includin
 **4 PostgreSQL integration tests**, with the paid test deselected by default.
 Phase 5 validation: **228 passed** including the same four PostgreSQL tests, with
 the paid test deselected. The offline-only subset is **224 passed**.
-Phase 5.5B is **269 passed** with four PostgreSQL tests and all sandbox cases;
-the paid provider test remains deselected.
+The Phase 5.5C checkpoint is **315 passed**, with four environment-dependent tests
+skipped and the paid provider test deselected.
 Alembic remains at **0001 (head)** with no schema drift: benchmark artifacts use
 separate files, so no schema migration was necessary. The preexisting two
 Starlette/httpx and AnyIO deprecation warnings remain.

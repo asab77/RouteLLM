@@ -72,9 +72,13 @@ async def test_reasoning_effort_is_typed_and_configuration_driven(monkeypatch):
     assert payload["temperature"] == 0
 
     for model in (luna, gemini, sonnet):
-        default_payload, _ = await capture_payload(
+        explicit_payload, _ = await capture_payload(
             model, InferenceRequest(prompt="test", temperature=0))
-        assert "reasoning" not in default_payload
+        assert explicit_payload["reasoning"] == {"effort": "low"}
+    assert (await capture_payload(
+        luna, InferenceRequest(prompt="test", temperature=0)))[0]["temperature"] == 0
+    assert (await capture_payload(
+        gemini, InferenceRequest(prompt="test", temperature=0)))[0]["temperature"] == 0
     assert "temperature" not in (await capture_payload(
         sonnet, InferenceRequest(prompt="test", temperature=0)))[0]
 

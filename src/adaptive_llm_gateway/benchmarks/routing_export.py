@@ -16,7 +16,7 @@ from adaptive_llm_gateway.evaluation.repository import FileEvaluationRepository
 from adaptive_llm_gateway.models.schemas import DomainModel
 from .features import RequestFeatures
 
-ROUTING_DATASET_VERSION = "1.0.0"
+ROUTING_DATASET_VERSION = "1.1.0"
 
 
 class RoutingCandidateSnapshot(DomainModel):
@@ -44,11 +44,13 @@ class RoutingDatasetRow(DomainModel):
     dataset_sha256: str
     request_features: RequestFeatures
     candidate: RoutingCandidateSnapshot
+    effective_max_output_tokens: int = Field(gt=0)
     provider_outcome: Literal["success", "failure"]
     provider_error_category: str | None = None
     generated_at: str
     input_tokens: int | None = Field(default=None, ge=0)
     output_tokens: int | None = Field(default=None, ge=0)
+    reasoning_tokens: int | None = Field(default=None, ge=0)
     latency_ms: float = Field(ge=0)
     candidate_cost_usd: Decimal | None = Field(default=None, ge=0)
     label_status: Literal["valid", "missing"]
@@ -120,6 +122,7 @@ async def export_routing_dataset(root: Path, run_id: UUID) -> tuple[Path, Path, 
     model_by_id = {model.model_id: model for model in run.models}
     frozen = run.configuration.get("frozen_model_configuration", {})
     features = run.configuration.get("request_features", {})
+    effective_limits = run.configuration.get("effective_max_output_tokens", {})
     if not isinstance(frozen, dict) or not isinstance(features, dict):
         raise ValueError("Run manifest lacks frozen model or request-feature snapshots")
 
@@ -133,6 +136,11 @@ async def export_routing_dataset(root: Path, run_id: UUID) -> tuple[Path, Path, 
         if not isinstance(snapshot, dict) or not isinstance(feature_snapshot, dict):
             raise ValueError("Run manifest snapshot is incomplete")
         response = result.response
+        task_limits = effective_limits.get(result.task_id, {}) if isinstance(effective_limits, dict) else {}
+        effective_limit = (task_limits.get(result.model_id)
+                           if isinstance(task_limits, dict) else None)
+        if type(effective_limit) is not int or effective_limit <= 0:
+            effective_limit = task.max_output_tokens
         if not result.success:
             label_status, acceptable = "missing", None
             missing_reason = f"provider_failure:{result.error_category or 'unknown'}"
@@ -158,6 +166,7 @@ async def export_routing_dataset(root: Path, run_id: UUID) -> tuple[Path, Path, 
                 capabilities=model.capabilities.model_dump(mode="json"),
                 reasoning_effort=(str(snapshot["reasoning_effort"])
                                   if snapshot.get("reasoning_effort") is not None else None)),
+            effective_max_output_tokens=effective_limit,
             provider_outcome="success" if result.success else "failure",
             provider_error_category=result.error_category,
             generated_at=result.created_at.isoformat(),
@@ -165,6 +174,8 @@ async def export_routing_dataset(root: Path, run_id: UUID) -> tuple[Path, Path, 
                           _failure_metric(result, "input_tokens", int)),
             output_tokens=(response.output_tokens if response else
                            _failure_metric(result, "output_tokens", int)),
+            reasoning_tokens=(None if response else
+                              _failure_metric(result, "reasoning_tokens", int)),
             latency_ms=(response.latency_ms if response else
                         (_failure_metric(result, "adapter_latency_ms", float)
                          or result.latency_ms)),

@@ -1,0 +1,44 @@
+{
+  "protocol": "routellm-foundation-v3",
+  "version": "3.0.0",
+  "dataset_path": "benchmarks/datasets/foundation-v3.json",
+  "dataset_sha256": "64eda8e7388233f645906412a2524982ebfb9c848c42ee24a468ba04c31d16e6",
+  "foundation_v2_sha256": "dcab5e9b6f1b8bc063555637e06db0d32ec51056959a7586f2cc411949adc964",
+  "candidate_reasoning_effort": {
+    "candidate-nemotron-3.5-lightning": "none",
+    "candidate-gpt-6-luna": "low",
+    "candidate-gemini-3-flash": "low",
+    "candidate-claude-sonnet-5": "low"
+  },
+  "collection_target": {
+    "requests": 56,
+    "candidates": 4,
+    "rows": 224
+  },
+  "acceptance_criteria": {
+    "minimum_valid_labels_overall": 213,
+    "minimum_valid_labels_per_candidate": 51,
+    "configuration_failure_cluster_rejected_at": 3,
+    "minimum_cross_model_label_disagreement_tasks": 10
+  },
+  "missing_label_policy": "Preserve as missing with the error category; never convert to a quality-zero label.",
+  "stop_rule": "If the acceptance criteria pass, Phase 5.5C ends and Phase 6 may begin. Scores and rankings do not justify V4.",
+  "effective_output_token_policy": {
+    "base_task_limits": "Foundation V3 dataset limits: the 26 approved V2-affected tasks are 160; all other tasks retain V2 limits.",
+    "gemini_reasoning_override": 256,
+    "gemini_reasoning_task_count": 8,
+    "all_other_candidate_task_pairs": "Use the Foundation V3 dataset task limit."
+  },
+  "candidate_task_max_output_tokens": {
+    "candidate-gemini-3-flash": {
+      "reasoning-easy-01": 256,
+      "reasoning-easy-02": 256,
+      "reasoning-medium-01": 256,
+      "reasoning-medium-02": 256,
+      "reasoning-medium-03": 256,
+      "reasoning-hard-01": 256,
+      "reasoning-hard-02": 256,
+      "reasoning-hard-03": 256
+    }
+  }
+}

@@ -1,0 +1,1528 @@
+{
+  "name": "routellm-foundation-v3",
+  "version": "3.0.0",
+  "tasks": [
+    {
+      "task_id": "qa-easy-01",
+      "category": "qa",
+      "prompt": "Context: The amber folder is stored in cabinet 4. Question: Which cabinet stores the amber folder?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 64,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "cabinet 4",
+          "4"
+        ],
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-easy-02",
+      "category": "qa",
+      "prompt": "Context: The ferry Alder departs at 08:20, while Birch departs at 09:10. Question: When does Alder depart?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 64,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "08:20",
+          "8:20"
+        ],
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-medium-01",
+      "category": "qa",
+      "prompt": "Context: Mira ordered 18 blue tiles and 12 green tiles. Before delivery, 3 blue tiles cracked. At delivery, 4 usable green tiles were transferred to another project, and 2 of the remaining usable tiles were reserved for color testing. A catalog note mentions 9 red samples that were never part of the order. Question: How many ordered tiles are usable and available for installation?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "21"
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-medium-02",
+      "category": "qa",
+      "prompt": "Context: Parcel K starts at North Depot and is sent first to East Hub. East Hub normally forwards North Depot parcels to Bay Station. Refrigerated parcels instead go to Cold Point. After that routing decision, any parcel marked medical priority is redirected to Ridge Clinic. Parcel K is refrigerated, marked medical priority, and weighs 4 kg; weight affects fees but not routing. Question: What is parcel K's final destination?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Ridge Clinic"
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-medium-03",
+      "category": "qa",
+      "prompt": "Context: Workshop A starts at 09:35 and lasts 50 minutes. A required room reset takes 15 minutes after A. Workshop B begins 10 minutes after the reset and lasts 35 minutes. A lunch reservation at 12:45 is unrelated. Question: When does Workshop B end?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "11:25"
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-hard-01",
+      "category": "qa",
+      "prompt": "Context: In every statement 'X mentors Y,' X is the mentor and Y is the mentee. Ada mentors Bo. Bo mentors Cy. Cy mentors Dee. Dee mentors Fae. For lineage reporting, Fae's direct mentor is level one, that mentor's mentor is level two, and the next mentor is level three. Erin manages Fae's project but is not in the mentorship chain. Question: Who is Fae's level-three mentor?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Bo"
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-hard-02",
+      "category": "qa",
+      "prompt": "Context: Route R initially visits Luma, Neri, Ossa, Pavo, and Quin in that order. Apply these updates in order: remove Neri because of a closure; move Pavo immediately before Ossa; insert Reka immediately after Ossa; then exchange the first and last stops. Route S visits Taro and is unaffected. Question: What is the final order of Route R?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Quin, Pavo, Ossa, Reka, Luma",
+          "Quin Pavo Ossa Reka Luma"
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "qa-hard-03",
+      "category": "qa",
+      "prompt": "Context: A $1,220 grant is divided among hardware, training, travel, outreach, and a fixed $120 reserve. Hardware receives twice the training allocation. Travel receives half the training allocation. Outreach receives the travel allocation plus $60. A publicity proposal is listed but receives nothing. Every dollar is allocated. Question: How much is allocated to hardware?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "$520",
+          "520"
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-easy-01",
+      "category": "classification",
+      "prompt": "Taxonomy: LUMEN = request to brighten a room; SHADE = request to darken a room; REPAIR = report of broken lighting. Classify: 'Please make the reading room brighter.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 32,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "LUMEN",
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-easy-02",
+      "category": "classification",
+      "prompt": "Taxonomy: ARRIVE = item was delivered; DELAY = item is late; CHANGE = alter delivery address. Classify: 'My package has not arrived by the promised date.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 32,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "DELAY",
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-medium-01",
+      "category": "classification",
+      "prompt": "Taxonomy: ACCESS = the user cannot complete sign-in with known credentials; PROFILE = the signed-in user only wants to update personal details; SECURITY = the account is accessible but shows activity the user does not recognize. Classify the primary issue: 'I signed in successfully after resetting my password. My mailing address is outdated, but my urgent concern is a login from a device I have never used.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "SECURITY",
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-medium-02",
+      "category": "classification",
+      "prompt": "Taxonomy: REFUND = reverse a completed charge the customer authorized; VOID = stop a still-pending charge the customer authorized; DISPUTE = investigate a charge the customer says they did not authorize, regardless of whether it is pending or completed. Classify: 'The hotel deposit is still pending. I recognize it and approved it, but the reservation was cancelled and I want the pending amount stopped.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "VOID",
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-medium-03",
+      "category": "classification",
+      "prompt": "Taxonomy: SCHEDULE = create a time when no appointment exists; RESCHEDULE = retain an existing appointment but change its time; CANCEL = remove an existing appointment without choosing a replacement. Classify: 'My confirmed dental visit is Tuesday. Do not remove the visit; move it to Friday afternoon. The reminder preference is unrelated.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 32,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "RESCHEDULE",
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-hard-01",
+      "category": "classification",
+      "prompt": "Policy labels: DATA_ERROR = accessible stored data contains an incorrect value; DATA_ACCESS = requested stored data cannot be obtained; DATA_SCOPE = data is accurate and accessible, but the user challenges why it is collected. If several topics are mentioned, classify the requested remedy, not background commentary. Classify: 'I downloaded my full profile, so access works. I understand why birth year is collected, but it says 1991 instead of 1992; please correct that value.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 32,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "DATA_ERROR",
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-hard-02",
+      "category": "classification",
+      "prompt": "Policy labels: DUPLICATE = two completed entries represent the same authorized purchase; PARTIAL = the charged amount is correct but part of the purchased service or goods was not delivered; WRONG_AMOUNT = a single purchase entry differs from the agreed total. Classify: 'My $24 meal was fully delivered and the receipt total is correct, but two separate completed $24 entries with the same merchant and time appear on my statement. A third $5 tip entry is valid.' Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "WRONG_AMOUNT",
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "classification-hard-03",
+      "category": "classification",
+      "prompt": "Taxonomy: OWNER = holds final accountability and release authority; REVIEWER = checks work and recommends changes but cannot authorize release; EXECUTOR = performs the implementation. When one person performs multiple activities, final release authority takes precedence, then review, then execution. Classify: 'Nia drafts the migration. Omar runs it in staging and comments on the output. Priya fixes one typo, reviews the final diff, and is the only person authorized to approve production release.' Classify Priya. Output one label.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "OWNER",
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-easy-01",
+      "category": "extraction",
+      "prompt": "Return JSON only. Extract the code and quantity: 'Shipment code ZX-14 contains 6 lamps.'",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 64,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "code": "ZX-14",
+          "quantity": 6
+        },
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-easy-02",
+      "category": "extraction",
+      "prompt": "Return JSON only with name and date normalized as YYYY-MM-DD: 'Ivo arrives on 7 February 2028.'",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 64,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "name": "Ivo",
+          "date": "2028-02-07"
+        },
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-medium-01",
+      "category": "extraction",
+      "prompt": "Return JSON only. From 'Mara leads Atlas (budget $400); Sol leads Beacon (budget $250). Atlas starts 2028-04-03.' extract Atlas as {project, lead, budget, start_date}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "project": "Atlas",
+          "lead": "Mara",
+          "budget": 400,
+          "start_date": "2028-04-03"
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-medium-02",
+      "category": "extraction",
+      "prompt": "Return JSON only. Text: 'Order A-9: two copper pens at $3 each. Order A-10: one silver pen at $5. Ignore sample S-1.' Extract A-9 with id, item, color, quantity, unit_price.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "id": "A-9",
+          "item": "pen",
+          "color": "copper",
+          "quantity": 2,
+          "unit_price": 3
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-medium-03",
+      "category": "extraction",
+      "prompt": "Return JSON only. Text: 'Lena's backup contact is Rui (555-0134). Rui's backup contact is null. Lena's office line 555-0199 is not a backup.' Extract Lena with nested backup {name, phone}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "name": "Lena",
+          "backup": {
+            "name": "Rui",
+            "phone": "555-0134"
+          }
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-hard-01",
+      "category": "extraction",
+      "prompt": "Return JSON only. Records: 'Nova Labs opened ticket T-31 on March 2, 2029; owner N. Vale; closed March 5. Nova Lab opened T-13 on March 4; owner Vale N.; still open.' Extract T-31 with organization, opened, closed, owner. Normalize dates YYYY-MM-DD.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "ticket": "T-31",
+          "organization": "Nova Labs",
+          "opened": "2029-03-02",
+          "closed": "2029-03-05",
+          "owner": "N. Vale"
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-hard-02",
+      "category": "extraction",
+      "prompt": "Return JSON only. 'Case R7 lists parent Lio, child Emi, and reviewer Taz. Case R8 lists parent Emi, child Noa, no reviewer. Lio's age 44 is irrelevant.' Extract R8 using null for missing reviewer and nested parties.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "case": "R8",
+          "parties": {
+            "parent": "Emi",
+            "child": "Noa"
+          },
+          "reviewer": null
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "extraction-hard-03",
+      "category": "extraction",
+      "prompt": "Return JSON only. Log: '[2029-01-03] node alpha: 18 ms; [2029-01-04] node alpha: unavailable; [2029-01-04] node alpine: 81 ms.' Extract the latest alpha record, preserving unavailable as null.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "node": "alpha",
+          "date": "2029-01-04",
+          "latency_ms": null
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-easy-01",
+      "category": "json",
+      "prompt": "Return JSON only with keys item and tags. Item is 'map'; tags are north and paper in that order.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "item": "map",
+          "tags": [
+            "north",
+            "paper"
+          ]
+        },
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-easy-02",
+      "category": "json",
+      "prompt": "Return JSON only: create {celsius, fahrenheit} for 20 Celsius using F=C*9/5+32.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 64,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "celsius": 20,
+          "fahrenheit": 68
+        },
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-medium-01",
+      "category": "json",
+      "prompt": "Return JSON only. From scores Ana=7, Bo=4, Cy=9, include only scores at least 7, sorted descending by score, as {qualified:[{name,score}]}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "qualified": [
+            {
+              "name": "Cy",
+              "score": 9
+            },
+            {
+              "name": "Ana",
+              "score": 7
+            }
+          ]
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-medium-02",
+      "category": "json",
+      "prompt": "Return JSON only. Transactions: food 12, travel 8, food 5, supplies 7. Aggregate totals by category and output {totals:{food,travel,supplies},grand_total}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "totals": {
+            "food": 17,
+            "travel": 8,
+            "supplies": 7
+          },
+          "grand_total": 32
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-medium-03",
+      "category": "json",
+      "prompt": "Return JSON only. Events: A at 09:30 active; B at 08:45 inactive; C at 10:00 active. Keep active events and sort by time ascending as {events:[{id,time}]}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "events": [
+            {
+              "id": "A",
+              "time": "09:30"
+            },
+            {
+              "id": "C",
+              "time": "10:00"
+            }
+          ]
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-hard-01",
+      "category": "json",
+      "prompt": "Return JSON only. Inventory: A red qty3 price4; B blue qty2 price8; C red qty5 price2; D red qty0 price9. Keep positive red items, sort by value qty*price descending then id, and output {items:[{id,value}],total_value}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "items": [
+            {
+              "id": "A",
+              "value": 12
+            },
+            {
+              "id": "C",
+              "value": 10
+            }
+          ],
+          "total_value": 22
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-hard-02",
+      "category": "json",
+      "prompt": "Return JSON only. Dependencies: api depends on db and auth; ui depends on api; docs depends on none. For target ui, include its transitive dependencies sorted alphabetically as {target,dependencies}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "target": "ui",
+          "dependencies": [
+            "api",
+            "auth",
+            "db"
+          ]
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "json-hard-03",
+      "category": "json",
+      "prompt": "Return JSON only. Shifts: Nia 09-12, Nia 13-17, Omar 10-15, Pia 08-10. Output hours per worker and workers with at least 7 total hours, sorted by name, as {hours:{Nia,Omar,Pia},eligible:[...]}.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "hours": {
+            "Nia": 7,
+            "Omar": 5,
+            "Pia": 2
+          },
+          "eligible": [
+            "Nia"
+          ]
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-easy-01",
+      "category": "reasoning",
+      "prompt": "A box starts with 18 clips. Six are removed and four added. What is the final count? Output only the final answer.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "16"
+        ],
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-easy-02",
+      "category": "reasoning",
+      "prompt": "A meeting begins at 14:25 and lasts 50 minutes. When does it end? Output only HH:MM.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "15:15"
+        ],
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-medium-01",
+      "category": "reasoning",
+      "prompt": "A token starts at 5. Add 4. If the result is odd, subtract 2; otherwise add 2. Triple the result, then wrap around a 12-square board by taking the remainder after division by 12. A decorative arrow marked +100 has no effect. What square is reached? Output only the number.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "9"
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-medium-02",
+      "category": "reasoning",
+      "prompt": "Five seats are numbered 1 through 5. C sits in seat 3. A sits immediately left of B. E sits somewhere to the right of B. D is not in an end seat. C is wearing red, which does not affect seating. Who sits in seat 1? Output only the letter.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "A"
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-medium-03",
+      "category": "reasoning",
+      "prompt": "A cart contains three $18 lamps and two $7 hooks. If merchandise totals at least $60, subtract a $10 discount. Then apply 5% tax to the discounted merchandise subtotal, and finally add a $5 delivery fee that is not taxed. A note about 40 loyalty points has no cash value. What is the final amount? Output only the number with two decimal places.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "65.90",
+          "$65.90"
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-hard-01",
+      "category": "reasoning",
+      "prompt": "Five tasks A, B, C, D, and E occupy slots 1 through 5. A is immediately before B. D is before A. E is after B. C is after E. Task C takes 20 minutes, but durations do not affect slots. What is the unique order? Output the five letters without spaces.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "DABEC"
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-hard-02",
+      "category": "reasoning",
+      "prompt": "A vault code has four distinct digits. The last digit is positive and even. The first digit is one more than the last. The second digit is two more than the first. The third digit is half the last. All four digits sum to 18. A scratched 9 nearby is irrelevant. What is the code? Output four digits.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "5724"
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "reasoning-hard-03",
+      "category": "reasoning",
+      "prompt": "A directed checkpoint network has these edges and costs: P\u2192Q costs 2, P\u2192R costs 1, Q\u2192S costs 2, Q\u2192T costs 7, R\u2192S costs 5, R\u2192U costs 1, U\u2192S costs 1, U\u2192T costs 6, and S\u2192T costs 2. The decorative return edge T\u2192P costs 0 but cannot help a route that ends at T. What is the minimum total cost from P to T? Output only the number.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "5"
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-easy-01",
+      "category": "coding",
+      "prompt": "Write only Python code defining clamp(value, low, high), returning low if value is below low, high if above high, otherwise value.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "clamp",
+        "parameters": 3,
+        "required_ast": [
+          "If",
+          "Compare"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              5,
+              0,
+              10
+            ],
+            "expected": 5
+          },
+          {
+            "args": [
+              -2,
+              0,
+              10
+            ],
+            "expected": 0
+          },
+          {
+            "args": [
+              20,
+              0,
+              10
+            ],
+            "expected": 10
+          }
+        ],
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-easy-02",
+      "category": "coding",
+      "prompt": "Write only Python code defining count_nonempty(values), returning the number of strings that are not empty after stripping whitespace.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 128,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "count_nonempty",
+        "parameters": 1,
+        "required_ast": [
+          "Call",
+          "GeneratorExp"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              [
+                "a",
+                " ",
+                "b"
+              ]
+            ],
+            "expected": 2
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": 0
+          }
+        ],
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-medium-01",
+      "category": "coding",
+      "prompt": "Write only Python code defining group_totals(rows). Each row is exactly [category, integer], where category is a string. Return a new dictionary summing all integers per category, including zero or negative final totals; support empty input and do not mutate rows.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "group_totals",
+        "parameters": 1,
+        "required_ast": [
+          "For",
+          "Dict"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              [
+                [
+                  "a",
+                  2
+                ],
+                [
+                  "b",
+                  1
+                ],
+                [
+                  "a",
+                  3
+                ]
+              ]
+            ],
+            "expected": {
+              "a": 5,
+              "b": 1
+            }
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": {}
+          }
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-medium-02",
+      "category": "coding",
+      "prompt": "Write only Python code defining parse_ranges(text). The input contains comma-separated non-negative integers or inclusive ascending ranges start-end. Ignore empty parts, remove duplicates, and return all represented integers sorted ascending. Example: '1-3,5,8-9' returns [1,2,3,5,8,9].",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 224,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "parse_ranges",
+        "parameters": 1,
+        "required_ast": [
+          "For",
+          "If",
+          "Call"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              "1-3,5,8-9"
+            ],
+            "expected": [
+              1,
+              2,
+              3,
+              5,
+              8,
+              9
+            ]
+          },
+          {
+            "args": [
+              "2,2,"
+            ],
+            "expected": [
+              2
+            ]
+          }
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-medium-03",
+      "category": "coding",
+      "prompt": "Write only Python code defining merge_counts(left, right). Both inputs map strings to integers. Return a new dictionary over the union of keys, treating a missing key as zero and summing its two counts. Omit only keys whose final sum is exactly zero; retain negative sums and do not mutate either input.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "merge_counts",
+        "parameters": 2,
+        "required_ast": [
+          "For",
+          "Dict",
+          "If"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              {
+                "a": 2
+              },
+              {
+                "a": -2,
+                "b": 3
+              }
+            ],
+            "expected": {
+              "b": 3
+            }
+          },
+          {
+            "args": [
+              {},
+              {}
+            ],
+            "expected": {}
+          }
+        ],
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-hard-01",
+      "category": "coding",
+      "prompt": "Write only Python code defining merge_intervals(intervals). Each item is a closed integer interval [start,end] with start <= end, and input may be unsorted. Merge intervals when they overlap or are adjacent with no missing integer between them: the next start is at most the current end plus 1. Return merged [start,end] lists sorted by start. Empty input returns [].",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 256,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "merge_intervals",
+        "parameters": 1,
+        "required_ast": [
+          "For",
+          "If",
+          "Call"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              [
+                [
+                  5,
+                  7
+                ],
+                [
+                  1,
+                  2
+                ],
+                [
+                  3,
+                  4
+                ]
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                7
+              ]
+            ]
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": []
+          },
+          {
+            "args": [
+              [
+                [
+                  1,
+                  1
+                ],
+                [
+                  3,
+                  3
+                ]
+              ]
+            ],
+            "expected": [
+              [
+                1,
+                1
+              ],
+              [
+                3,
+                3
+              ]
+            ]
+          }
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-hard-02",
+      "category": "coding",
+      "prompt": "Write only Python code defining shortest_hops(graph, start, end). The directed graph maps node strings to neighbor lists; a neighbor may lack its own dictionary entry and then has no outgoing edges. Return the minimum number of directed edges, return 0 whenever start equals end, and return None when end is unreachable. Handle cycles without mutating graph.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 256,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "shortest_hops",
+        "parameters": 3,
+        "required_ast": [
+          "While",
+          "For",
+          "If"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              {
+                "a": [
+                  "b"
+                ],
+                "b": [
+                  "c"
+                ],
+                "c": [
+                  "a"
+                ]
+              },
+              "a",
+              "c"
+            ],
+            "expected": 2
+          },
+          {
+            "args": [
+              {
+                "a": []
+              },
+              "a",
+              "z"
+            ],
+            "expected": null
+          }
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "coding-hard-03",
+      "category": "coding",
+      "prompt": "Write only Python code defining max_nonadjacent(values). For a list of integers, return the maximum sum obtainable by selecting elements with no two selected indices adjacent. Selecting no elements is allowed, so empty and all-negative inputs return 0. Do not mutate values.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 224,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "max_nonadjacent",
+        "parameters": 1,
+        "required_ast": [
+          "For",
+          "Call"
+        ],
+        "evaluation_mode": "static_pending_functional",
+        "functional_tests": [
+          {
+            "args": [
+              [
+                2,
+                7,
+                9,
+                3,
+                1
+              ]
+            ],
+            "expected": 12
+          },
+          {
+            "args": [
+              [
+                -4,
+                -2
+              ]
+            ],
+            "expected": 0
+          },
+          {
+            "args": [
+              []
+            ],
+            "expected": 0
+          }
+        ],
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-easy-01",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence of at most 24 words: The North Clinic will open two hours late on Friday because of electrical maintenance. Emergency services remain available.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "Friday opening is delayed by two hours",
+          "electrical maintenance is the cause",
+          "emergency services remain available"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 1,
+          "max_words": 24,
+          "forbidden_strings": []
+        },
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-easy-02",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence of at most 22 words: The garden workshop moved from Room 2 to Room 5. Its 3 p.m. start time is unchanged.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 64,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "workshop moved from Room 2 to Room 5",
+          "start remains 3 p.m."
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 1,
+          "max_words": 22,
+          "forbidden_strings": []
+        },
+        "difficulty": "easy"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-medium-01",
+      "category": "summarization",
+      "prompt": "Write one sentence, at most 28 words: River buses pause Monday morning for inspection and resume at noon. Rail service is unaffected. The cafe opens normally; yesterday's rain total was 8 mm.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "river buses pause Monday morning",
+          "service resumes at noon",
+          "rail service is unaffected"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 1,
+          "max_words": 28,
+          "forbidden_strings": [
+            "cafe closure"
+          ]
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-medium-02",
+      "category": "summarization",
+      "prompt": "Write one sentence, at most 30 words: The trial enrolled 40 volunteers. Thirty-six completed it. Reported wait time fell from 12 to 8 minutes. The office wallpaper was replaced in June.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "40 enrolled and 36 completed",
+          "wait time fell from 12 to 8 minutes"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 1,
+          "max_words": 30,
+          "forbidden_strings": []
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-medium-03",
+      "category": "summarization",
+      "prompt": "Output exactly one bullet beginning '- '. Use at most 26 words: Cedar School adds a morning bus on Route 3 from September 4; the afternoon schedule and fares remain unchanged.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 80,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "morning bus added to Route 3",
+          "starts September 4",
+          "afternoon schedule and fares unchanged"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 1,
+          "max_words": 26,
+          "required_prefix": "- ",
+          "forbidden_strings": []
+        },
+        "difficulty": "medium"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-hard-01",
+      "category": "summarization",
+      "prompt": "Summarize in at most two sentences and 42 words: A six-month pilot gave 120 homes smart meters; 108 supplied complete data. Average electricity use fell 9%, but the report cannot attribute causation. Installation cost exceeded plan by 4%. A separate survey covered paint colors.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 112,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "120 homes participated and 108 supplied complete data",
+          "average use fell 9%",
+          "causation is not established",
+          "installation cost exceeded plan by 4%"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 2,
+          "max_words": 42,
+          "forbidden_strings": [
+            "proved the meters caused"
+          ]
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-hard-02",
+      "category": "summarization",
+      "prompt": "Write one paragraph of no more than 48 words: After a sensor fault, Harbor Plant recalled lots H21 and H22. Lot H20 passed retesting. No injuries were reported. Replacement shipments begin May 6, prioritizing hospitals. Quarterly sales rose 2%, an unrelated fact.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 160,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "H21 and H22 recalled after sensor fault",
+          "H20 passed retesting",
+          "no injuries",
+          "replacement begins May 6 with hospitals prioritized"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 3,
+          "max_words": 48,
+          "forbidden_strings": [
+            "H20 recalled"
+          ]
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    },
+    {
+      "task_id": "summarization-hard-03",
+      "category": "summarization",
+      "prompt": "Output exactly one bullet beginning '- ' and use at most 40 words: The council approved night repairs on Bridge K from July 8-11, closing one lane from 10 p.m. to 5 a.m. Buses remain on schedule. Emergency vehicles get priority. A proposed daytime closure was rejected.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 112,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "semantic_requirements": [
+          "night repairs July 8-11",
+          "one lane closed 10 p.m.-5 a.m.",
+          "buses remain on schedule",
+          "emergency vehicles have priority",
+          "daytime closure rejected"
+        ],
+        "deterministic_constraints": {
+          "max_sentences": 2,
+          "max_words": 40,
+          "required_prefix": "- ",
+          "forbidden_strings": [
+            "daytime closure approved"
+          ]
+        },
+        "difficulty": "hard"
+      },
+      "acceptable_threshold": 1,
+      "tags": [
+        "foundation-v2",
+        "original"
+      ]
+    }
+  ]
+}

@@ -38,8 +38,8 @@ LEGACY_MODELS = (
                     reasoning=ReasoningBehavior.PROVIDER_DEFAULT)),
 )
 
-# Frozen Phase 5.5C routing candidates. Nemotron explicitly disables reasoning;
-# the remaining candidates retain provider-default reasoning by omitting the field.
+# Frozen Foundation V3 routing candidates. Nemotron disables reasoning; the
+# remaining candidates use the lowest catalog-supported explicit effort.
 CANDIDATE_MODELS = (
     ModelConfig(model_id="candidate-nemotron-3.5-lightning", provider="vercel",
                 provider_model_name="nvidia/nemotron-3.5-lightning",
@@ -55,21 +55,24 @@ CANDIDATE_MODELS = (
                 context_window=1050000,
                 capabilities=ModelCapabilities(supports_temperature=True,
                     supports_structured_output=True,
-                    reasoning=ReasoningBehavior.PROVIDER_DEFAULT)),
+                    reasoning=ReasoningBehavior.PROVIDER_DEFAULT),
+                reasoning_effort=ReasoningEffort.LOW),
     ModelConfig(model_id="candidate-gemini-3-flash", provider="vercel",
                 provider_model_name="google/gemini-3-flash",
                 input_cost_per_1m_tokens="0.50", output_cost_per_1m_tokens="3.00",
                 context_window=1000000,
                 capabilities=ModelCapabilities(supports_temperature=True,
                     supports_structured_output=True,
-                    reasoning=ReasoningBehavior.PROVIDER_DEFAULT)),
+                    reasoning=ReasoningBehavior.PROVIDER_DEFAULT),
+                reasoning_effort=ReasoningEffort.LOW),
     ModelConfig(model_id="candidate-claude-sonnet-5", provider="vercel",
                 provider_model_name="anthropic/claude-sonnet-5",
                 input_cost_per_1m_tokens="2.00", output_cost_per_1m_tokens="10.00",
                 context_window=1000000,
                 capabilities=ModelCapabilities(supports_temperature=False,
                     supports_structured_output=True,
-                    reasoning=ReasoningBehavior.PROVIDER_DEFAULT)),
+                    reasoning=ReasoningBehavior.PROVIDER_DEFAULT),
+                reasoning_effort=ReasoningEffort.LOW),
 )
 
 # These models are available only to explicitly enabled semantic-judge workflows.
