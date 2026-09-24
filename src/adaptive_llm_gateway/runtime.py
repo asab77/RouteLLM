@@ -6,7 +6,8 @@ from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 
 from adaptive_llm_gateway.application.service import InferenceService
-from adaptive_llm_gateway.bootstrap import create_development_service
+from adaptive_llm_gateway.bootstrap import create_development_service, configure_gateway
+from adaptive_llm_gateway.providers.gateway_config import GatewaySettings
 from adaptive_llm_gateway.persistence.config import DatabaseSettings
 from adaptive_llm_gateway.persistence.database import Database
 
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 async def application_service() -> AsyncIterator[InferenceService]:
     settings = DatabaseSettings.from_environment()
     service = create_development_service()
+    configure_gateway(service, GatewaySettings.from_environment())
     if settings.database_url is None:
         logger.warning("telemetry_disabled: DATABASE_URL is not configured")
         yield service

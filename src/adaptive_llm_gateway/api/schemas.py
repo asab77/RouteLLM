@@ -5,10 +5,15 @@ from pydantic import BaseModel
 from adaptive_llm_gateway.models import InferenceRequest, InferenceResponse
 from adaptive_llm_gateway.models.schemas import Identifier
 from adaptive_llm_gateway.telemetry.contracts import TelemetrySummary
+from adaptive_llm_gateway.evaluation.models import EvaluationSummary
 
 
 class MetricsSummary(TelemetrySummary):
     """Public aggregate telemetry response; no ORM objects."""
+
+
+class BenchmarkEvaluationSummary(EvaluationSummary):
+    """Read-only aggregate evaluation; raw local paths are never exposed."""
 
 
 class InferencePayload(InferenceRequest):

@@ -28,3 +28,5 @@ temp/
 *.sqlite3
 *.db
 docker/postgres/data/
+
+benchmark-results/

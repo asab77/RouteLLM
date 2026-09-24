@@ -6,6 +6,7 @@ from uuid import uuid4
 from adaptive_llm_gateway.telemetry.contracts import InferenceTelemetryRepository, TelemetryEvent
 from adaptive_llm_gateway.errors import (
     ContextLimitError,
+    GatewayError,
     ModelDisabledError,
     ProviderFailureError,
     ProviderUnavailableError,
@@ -45,6 +46,8 @@ class InferenceService:
             categories = {ContextLimitError: "context_limit_exceeded", ModelDisabledError: "model_disabled",
                           ProviderUnavailableError: "provider_unavailable", ProviderFailureError: "provider_failure"}
             category = next(value for kind, value in categories.items() if isinstance(exc, kind))
+            if isinstance(exc, GatewayError):
+                category = exc.category.value
             await self._record(TelemetryEvent(
                 request_id=correlation_id, model_id=model.model_id, provider=model.provider,
                 success=False, error_category=category, latency_ms=(perf_counter() - started) * 1000,
@@ -83,7 +86,7 @@ class InferenceService:
             if response.model_id != model.model_id or response.provider != model.provider:
                 raise ValueError("Provider returned inconsistent model metadata")
             return response
-        except (ContextLimitError, ModelDisabledError, ProviderUnavailableError):
+        except (ContextLimitError, ModelDisabledError, ProviderUnavailableError, ProviderFailureError):
             raise
         except Exception as exc:
             # Cancellation (BaseException) propagates; adapter details stay internal.

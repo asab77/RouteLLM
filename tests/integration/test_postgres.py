@@ -125,3 +125,41 @@ async def test_migration_matches_metadata_and_can_downgrade_upgrade(database):
 
     async with engine.begin() as connection:
         await connection.run_sync(verify)
+
+
+@pytest.mark.asyncio
+async def test_mock_gateway_telemetry_and_benchmark_storage_separation(database, tmp_path):
+    import httpx
+    from pydantic import SecretStr
+    from adaptive_llm_gateway.bootstrap import create_development_service
+    from adaptive_llm_gateway.benchmarks.models import load_dataset
+    from adaptive_llm_gateway.benchmarks.repository import FileBenchmarkRepository
+    from adaptive_llm_gateway.benchmarks.runner import BenchmarkRunner
+    from adaptive_llm_gateway.evaluation.service import EvaluationService
+    from adaptive_llm_gateway.models import InferenceRequest
+    from adaptive_llm_gateway.providers.gateway_config import GatewaySettings, REAL_MODELS
+    from adaptive_llm_gateway.providers.vercel import VercelGatewayProvider
+    from pathlib import Path
+
+    _, sessions = database
+    repository = PostgresTelemetryRepository(sessions)
+    service = create_development_service()
+    service.telemetry = repository
+    service.registry.register(REAL_MODELS[0])
+    service.resolver.register('vercel', lambda model: VercelGatewayProvider(model,
+        GatewaySettings(api_key=SecretStr('test-only-key')),
+        transport=httpx.MockTransport(lambda request: httpx.Response(200, json={
+            'choices':[{'message':{'content':'controlled answer'}}],
+            'usage':{'prompt_tokens':10,'completion_tokens':5}}))))
+    await service.generate('gateway-nano', InferenceRequest(prompt='controlled input'), request_id='gateway-db')
+    before = await repository.summary()
+    assert before.total_requests == 1
+    assert before.total_estimated_cost_usd == Decimal('0.000003')
+    run = await BenchmarkRunner(service, FileBenchmarkRepository(tmp_path)).run(
+        load_dataset(Path('benchmarks/datasets/foundation-v1.json')), ['gateway-nano','fake-small'], limit=1)
+    assert (await repository.summary()) == before
+    assert len(list((tmp_path / str(run.run_id) / 'results').glob('*.json'))) == 2
+    evaluation = await EvaluationService(tmp_path).evaluate(run.run_id)
+    assert evaluation.overall.evaluated_tasks == 2
+    assert (await repository.summary()) == before
+    assert (tmp_path / str(run.run_id) / 'evaluation-summary.json').exists()

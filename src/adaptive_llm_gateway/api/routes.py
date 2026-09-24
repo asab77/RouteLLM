@@ -1,11 +1,13 @@
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Request
 
 from adaptive_llm_gateway.application.service import InferenceService
 from adaptive_llm_gateway.telemetry.query import TelemetryQueryService
+from adaptive_llm_gateway.evaluation.service import EvaluationService
 
-from .dependencies import get_service
+from .dependencies import get_evaluation_service, get_service
 from .schemas import (
     ErrorResponse,
     HealthResponse,
@@ -13,11 +15,13 @@ from .schemas import (
     InferenceResult,
     ModelList,
     MetricsSummary,
+    BenchmarkEvaluationSummary,
     PublicModel,
 )
 
 router = APIRouter()
 Service = Annotated[InferenceService, Depends(get_service)]
+Evaluation = Annotated[EvaluationService, Depends(get_evaluation_service)]
 
 
 @router.get("/health", response_model=HealthResponse, tags=["health"])
@@ -36,7 +40,7 @@ async def list_models(service: Service) -> ModelList:
 
 @router.post(
     "/v1/inference", response_model=InferenceResult, tags=["inference"],
-    responses={status: {"model": ErrorResponse} for status in (400, 403, 404, 422, 502, 503)},
+    responses={status: {"model": ErrorResponse} for status in (400, 403, 404, 422, 429, 502, 503, 504)},
     openapi_extra={"parameters": [{
         "name": "X-Request-ID", "in": "header", "required": False,
         "description": "Optional correlation label; generated UUID4 when omitted.",
@@ -54,3 +58,10 @@ async def inference(payload: InferencePayload, request: Request, service: Servic
 async def metrics_summary(service: Service) -> MetricsSummary:
     summary = await TelemetryQueryService(service.telemetry, service.telemetry_timeout).summary()
     return MetricsSummary(**summary.model_dump())
+
+
+@router.get("/v1/benchmarks/{run_id}/summary", response_model=BenchmarkEvaluationSummary,
+            tags=["benchmarks"], responses={404: {"model": ErrorResponse}, 422: {"model": ErrorResponse}})
+async def benchmark_summary(run_id: UUID, evaluation: Evaluation) -> BenchmarkEvaluationSummary:
+    summary = await evaluation.summary(run_id)
+    return BenchmarkEvaluationSummary(**summary.model_dump())

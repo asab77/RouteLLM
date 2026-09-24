@@ -1,0 +1,816 @@
+{
+  "name": "routellm-foundation",
+  "version": "1.1.0",
+  "tasks": [
+    {
+      "task_id": "qa-01",
+      "category": "qa",
+      "prompt": "What is the chemical symbol for gold? Return only the symbol.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Au"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "qa-02",
+      "category": "qa",
+      "prompt": "How many sides does a hexagon have? Return only the integer.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "6"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "qa-03",
+      "category": "qa",
+      "prompt": "What is the capital of Japan? Return only the city name.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Tokyo"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "qa-04",
+      "category": "qa",
+      "prompt": "At standard atmospheric pressure, at what Celsius temperature does pure water freeze? Return only the number.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "0"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "qa-05",
+      "category": "qa",
+      "prompt": "Which planet is known as the Red Planet? Return only its name.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Mars"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "summarization-01",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence: The library will close Monday for repairs. It will reopen Tuesday at 9 a.m. Online borrowing remains available.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "required_facts": [
+          [
+            "closed monday",
+            "close monday"
+          ],
+          [
+            "reopens tuesday at 9 a.m.",
+            "reopen tuesday at 9",
+            "reopens tuesday 9 a.m."
+          ],
+          [
+            "online borrowing remains available",
+            "online borrowing is available",
+            "online available"
+          ]
+        ],
+        "forbidden_claims": []
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 0.8
+    },
+    {
+      "task_id": "summarization-02",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence: A team planted 12 trees in March and 8 in April. Volunteers watered all 20 trees weekly.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "required_facts": [
+          [
+            "20 trees",
+            "twelve trees in march and eight in april"
+          ],
+          [
+            "march and april"
+          ],
+          [
+            "watered weekly",
+            "weekly watering"
+          ]
+        ],
+        "forbidden_claims": []
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 0.8
+    },
+    {
+      "task_id": "summarization-03",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence: A fictional cafe tested reusable cups for four weeks. Waste fell by 30 percent. Staff recommended continuing the trial.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "required_facts": [
+          [
+            "four weeks",
+            "4 weeks"
+          ],
+          [
+            "waste fell by 30 percent",
+            "waste fell 30%",
+            "30 percent"
+          ],
+          [
+            "recommended continuing",
+            "continue the trial"
+          ]
+        ],
+        "forbidden_claims": []
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 0.8
+    },
+    {
+      "task_id": "summarization-04",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence: Bus 7 will skip Oak Street on Saturday due to paving. Riders should board at Pine Street. Normal service resumes Sunday.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "required_facts": [
+          [
+            "skip oak street on saturday",
+            "oak street on saturday"
+          ],
+          [
+            "board at pine street",
+            "pine street"
+          ],
+          [
+            "normal service resumes sunday",
+            "resumes sunday"
+          ]
+        ],
+        "forbidden_claims": []
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 0.8
+    },
+    {
+      "task_id": "summarization-05",
+      "category": "summarization",
+      "prompt": "Summarize in one sentence: The club voted to meet monthly instead of weekly. Meetings will be on the first Thursday. Membership fees stay unchanged.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "required_facts": [
+          [
+            "meet monthly",
+            "monthly instead of weekly"
+          ],
+          [
+            "first thursday"
+          ],
+          [
+            "fees stay unchanged",
+            "fees unchanged"
+          ]
+        ],
+        "forbidden_claims": []
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 0.8
+    },
+    {
+      "task_id": "extraction-01",
+      "category": "extraction",
+      "prompt": "Extract the date as JSON with key date: The workshop begins on 2027-03-14.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "date": "2027-03-14"
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "extraction-02",
+      "category": "extraction",
+      "prompt": "Extract names into a JSON array in source order: Mina and Leo packed the boxes.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": [
+          "Mina",
+          "Leo"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "extraction-03",
+      "category": "extraction",
+      "prompt": "Extract quantity and item as JSON: Please order 12 blue notebooks.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "quantity": 12,
+          "item": "blue notebooks"
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "extraction-04",
+      "category": "extraction",
+      "prompt": "Extract start and end in HH:MM as JSON: The fictional tour runs from 09:30 to 11:15.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "start": "09:30",
+          "end": "11:15"
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "extraction-05",
+      "category": "extraction",
+      "prompt": "Extract cities into a JSON array: We visited Oslo, then Lima, then Seoul.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": [
+          "Oslo",
+          "Lima",
+          "Seoul"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "classification-01",
+      "category": "classification",
+      "prompt": "Label the sentiment positive, neutral, or negative. Return only the label: The service was excellent and I loved it.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "positive"
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "classification-02",
+      "category": "classification",
+      "prompt": "Label the sentiment positive, neutral, or negative. Return only the label: The box is on the table.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "neutral"
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "classification-03",
+      "category": "classification",
+      "prompt": "Label the sentiment positive, neutral, or negative. Return only the label: The product broke immediately and was disappointing.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "negative"
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "classification-04",
+      "category": "classification",
+      "prompt": "Classify as question or statement. Return only the label: Where is the station?",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "question"
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "classification-05",
+      "category": "classification",
+      "prompt": "Classify the support request as billing or technical. Return only the label: My invoice contains a duplicate charge.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "expected_label": "billing"
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "json-01",
+      "category": "json",
+      "prompt": "Return only JSON with keys city and country for Paris, France.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "city": "Paris",
+          "country": "France"
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "json-02",
+      "category": "json",
+      "prompt": "Return only JSON with key squares containing squares of 1, 2, and 3 in order.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "squares": [
+            1,
+            4,
+            9
+          ]
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "json-03",
+      "category": "json",
+      "prompt": "Return only JSON with keys active (true) and count (3), using proper JSON types.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "active": true,
+          "count": 3
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "json-04",
+      "category": "json",
+      "prompt": "Return only JSON with key sorted containing these numbers ascending: 9, 2, 5.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "sorted": [
+            2,
+            5,
+            9
+          ]
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "json-05",
+      "category": "json",
+      "prompt": "Return only JSON with key items holding two objects: name pen and quantity 2; name book and quantity 1.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "json",
+      "evaluation_metadata": {
+        "expected": {
+          "items": [
+            {
+              "name": "pen",
+              "quantity": 2
+            },
+            {
+              "name": "book",
+              "quantity": 1
+            }
+          ]
+        }
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "reasoning-01",
+      "category": "reasoning",
+      "prompt": "A shop has 18 apples, sells 7, then receives 4. How many apples remain? Return only the integer.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "15"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "reasoning-02",
+      "category": "reasoning",
+      "prompt": "All glips are blons. No blons are trets. Can any glip be a tret? Return only yes or no.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "no"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "reasoning-03",
+      "category": "reasoning",
+      "prompt": "Mia is older than Leo. Leo is older than Ava. Who is youngest? Return only the name.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "Ava"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "reasoning-04",
+      "category": "reasoning",
+      "prompt": "A train travels 120 km in 2 hours at constant speed. How many km does it travel in 30 minutes? Return only the number.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "30"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "reasoning-05",
+      "category": "reasoning",
+      "prompt": "A rectangle has perimeter 30 and length 9. What is its width? Return only the number.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 96,
+      "temperature": 0,
+      "expected_output_type": "text",
+      "evaluation_metadata": {
+        "accepted_answers": [
+          "6"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "coding-01",
+      "category": "coding",
+      "prompt": "Write a Python function is_even(n) returning whether integer n is even. Return code only.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "is_even",
+        "parameters": 1,
+        "test_cases": [
+          [
+            2,
+            true
+          ],
+          [
+            3,
+            false
+          ],
+          [
+            0,
+            true
+          ]
+        ],
+        "required_ast": [
+          "Mod",
+          "Compare"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "coding-02",
+      "category": "coding",
+      "prompt": "Write a Python function reverse_text(s) returning the reversed string. Return code only.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "reverse_text",
+        "parameters": 1,
+        "test_cases": [
+          [
+            "abc",
+            "cba"
+          ],
+          [
+            "",
+            ""
+          ]
+        ],
+        "required_ast": [
+          "Subscript",
+          "Slice",
+          "USub"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "coding-03",
+      "category": "coding",
+      "prompt": "Write a Python function count_vowels(s) counting ASCII aeiou case-insensitively. Return code only.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "count_vowels",
+        "parameters": 1,
+        "test_cases": [
+          [
+            "Hello",
+            2
+          ],
+          [
+            "AEIOU",
+            5
+          ]
+        ],
+        "required_ast": [
+          "In"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "coding-04",
+      "category": "coding",
+      "prompt": "Write a Python function unique_sorted(values) returning distinct integers sorted ascending. Return code only.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "unique_sorted",
+        "parameters": 1,
+        "test_cases": [
+          [
+            [
+              3,
+              1,
+              3
+            ],
+            [
+              1,
+              3
+            ]
+          ]
+        ],
+        "required_ast": [
+          "Call"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    },
+    {
+      "task_id": "coding-05",
+      "category": "coding",
+      "prompt": "Write a Python function factorial(n) for nonnegative integers, with factorial(0)=1. Return code only.",
+      "system_prompt": "Follow the requested output format precisely.",
+      "max_output_tokens": 192,
+      "temperature": 0,
+      "expected_output_type": "code",
+      "evaluation_metadata": {
+        "function_name": "factorial",
+        "parameters": 1,
+        "test_cases": [
+          [
+            0,
+            1
+          ],
+          [
+            5,
+            120
+          ]
+        ],
+        "required_ast": [
+          "Mult"
+        ]
+      },
+      "tags": [
+        "foundation",
+        "original"
+      ],
+      "acceptable_threshold": 1.0
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 """ASGI entry point: uvicorn adaptive_llm_gateway.api.app:app."""
 
 import re
+import os
+from pathlib import Path
 from contextlib import asynccontextmanager
 from collections.abc import Awaitable, Callable
 from uuid import uuid4
@@ -15,6 +17,8 @@ from adaptive_llm_gateway.application.service import InferenceService
 from adaptive_llm_gateway.bootstrap import create_development_service
 from adaptive_llm_gateway.errors import (
     ContextLimitError,
+    GatewayError,
+    GatewayErrorCategory,
     ModelDisabledError,
     ProviderFailureError,
     ProviderUnavailableError,
@@ -22,12 +26,16 @@ from adaptive_llm_gateway.errors import (
 from adaptive_llm_gateway.registry import ModelNotFoundError
 from adaptive_llm_gateway.runtime import application_service
 from adaptive_llm_gateway.telemetry.query import TelemetryUnavailableError
+from adaptive_llm_gateway.evaluation.service import EvaluationService
+from adaptive_llm_gateway.errors import EvaluationArtifactError, EvaluationNotFoundError
 
 from .routes import router
 from .schemas import ErrorDetail, ErrorResponse
 
 _REQUEST_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 _ERRORS = {
+    EvaluationNotFoundError: (404, "evaluation_not_found", "The benchmark evaluation was not found."),
+    EvaluationArtifactError: (422, "evaluation_artifact_invalid", "The benchmark evaluation artifact is invalid."),
     TelemetryUnavailableError: (503, "telemetry_unavailable", "Telemetry is currently unavailable."),
     ModelNotFoundError: (404, "model_not_found", "The requested model was not found."),
     ModelDisabledError: (403, "model_disabled", "The requested model is disabled."),
@@ -56,11 +64,13 @@ def create_app(service: InferenceService | None = None) -> FastAPI:
 
     app = FastAPI(
         title="Adaptive LLM Gateway",
-        version="0.3.0",
-        description="Phase 3: explicit model inference with PostgreSQL telemetry. Intelligent routing is deferred.",
+        version="0.5.5",
+        description="Phase 5.5A: stronger offline benchmarks and honest incomplete-evaluation status. Routing is deferred.",
         lifespan=lifespan,
     )
     app.state.inference_service = service if service is not None else create_development_service()
+    app.state.evaluation_service = EvaluationService(
+        Path(os.environ.get("BENCHMARK_RESULTS_DIR", "benchmark-results")))
 
     @app.middleware("http")
     async def correlation_id(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
@@ -76,6 +86,11 @@ def create_app(service: InferenceService | None = None) -> FastAPI:
         return response
 
     async def application_error(request: Request, exc: Exception) -> JSONResponse:
+        if isinstance(exc, GatewayError):
+            status = {GatewayErrorCategory.NOT_CONFIGURED: 503, GatewayErrorCategory.RATE_LIMIT: 429,
+                      GatewayErrorCategory.TIMEOUT: 504, GatewayErrorCategory.CONTEXT_LIMIT: 422,
+                      GatewayErrorCategory.INVALID_REQUEST: 422}.get(exc.category, 502)
+            return error_response(request, status, exc.category.value, "The gateway request could not be completed.")
         # Resolve subclasses as well as the explicitly registered error types.
         for error_type, (status, code, message) in _ERRORS.items():
             if isinstance(exc, error_type):

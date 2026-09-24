@@ -1,9 +1,10 @@
 """Validated, immutable configuration and inference data."""
 
 from decimal import Decimal
+from enum import StrEnum
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator, model_validator
 
 Identifier = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 Money = Annotated[Decimal, Field(ge=0, allow_inf_nan=False)]
@@ -13,6 +14,33 @@ PositiveTokenCount = Annotated[int, Field(gt=0, strict=True)]
 
 class DomainModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
+
+
+class ReasoningBehavior(StrEnum):
+    """How a registered model handles reasoning when no override is requested."""
+
+    UNSUPPORTED = "unsupported"
+    PROVIDER_DEFAULT = "provider_default"
+    ADAPTIVE = "adaptive"
+
+
+class ReasoningEffort(StrEnum):
+    """Explicit provider-agnostic reasoning effort; omission uses the provider default."""
+
+    NONE = "none"
+    MINIMAL = "minimal"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    XHIGH = "xhigh"
+
+
+class ModelCapabilities(DomainModel):
+    """Small, explicit set of generation capabilities used by request builders."""
+
+    supports_temperature: bool = Field(default=True, strict=True)
+    supports_structured_output: bool = Field(default=False, strict=True)
+    reasoning: ReasoningBehavior = ReasoningBehavior.UNSUPPORTED
 
 
 class ModelConfig(DomainModel):
@@ -25,6 +53,15 @@ class ModelConfig(DomainModel):
     output_cost_per_1m_tokens: Money
     context_window: PositiveTokenCount
     enabled: bool = Field(default=True, strict=True)
+    capabilities: ModelCapabilities = Field(default_factory=ModelCapabilities)
+    reasoning_effort: ReasoningEffort | None = None
+
+    @model_validator(mode="after")
+    def reject_unsupported_reasoning_effort(self) -> "ModelConfig":
+        if (self.reasoning_effort is not None
+                and self.capabilities.reasoning is ReasoningBehavior.UNSUPPORTED):
+            raise ValueError("explicit reasoning effort requires reasoning support")
+        return self
 
 
 class InferenceRequest(DomainModel):
