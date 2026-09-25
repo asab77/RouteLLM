@@ -5,8 +5,9 @@ cheaper models may be sufficient. The long-term goal is an adaptive inference
 gateway that selects the lowest-cost model predicted to satisfy a configurable
 quality requirement.
 
-**Current status: Phase 8A is complete; the Phase 8B production request-feature
-and category contract is ready for review but is not integrated with inference.**
+**Current status: Phase 8D composes the versioned quality predictor and cost-aware
+policy behind an offline-only routing service. It remains intentionally disconnected
+from public inference and provider execution.**
 RouteLLM owns model definitions, explicit model selection, Decimal cost estimates,
 and PostgreSQL production telemetry. Vercel AI Gateway provides model access only.
 A separate controlled benchmark runner produces experimental artifacts, and an
@@ -633,7 +634,77 @@ but failed Criterion 3; the concise
 [human-review decision](benchmarks/protocols/foundation-v3-human-review.md) approves
 the frozen dataset for downstream routing analysis with explicit missing-label,
 grouped-split, and generalization limitations. Generated benchmark responses and
-routing exports remain ignored. Request features remain unused by any router.
+routing exports remain ignored. Request features remain unused by the public
+inference endpoint.
+
+## Phase 8C quality predictor
+
+The deployable candidate formulation is `INTERACTION_NO_PROVIDER_PIN`: the Phase 7
+category/candidate interaction logistic regression with only
+`upstream_provider_pin` removed. Provider pin was discovered as a predictive input
+during productionization, then shown by the controlled Phase 8C-0 ablation to be
+fully redundant with candidate identity in Foundation V3. Historical Phase 7 code
+and artifacts retain the original feature for reproducibility.
+
+`CanonicalQualityFeatures` is the single versioned input contract for the final
+training adapter and production adapter. Both use the same ordered feature matrix,
+one-hot encoding, numeric scaling, boolean conversion, derived
+`category::candidate` interaction, and fitted sklearn pipeline. The adapters map
+experimental `json` to production `structured_json`; category provenance remains
+metadata and is never predictive. A category is required: absence produces a typed
+compatibility failure, with no guessing or default.
+
+Structured-output state comes only from explicit benchmark or internal request
+configuration. Prompt wording does not activate it. Reasoning effort normalizes to
+the typed provider-neutral enum, with omission represented as `none`. Effective
+output allowance uses the request allowance plus the model's typed per-category
+output policy, without model-ID or model-slug cases.
+
+The first artifact supports only the four candidate identities represented during
+training. Registry extensibility and predictor compatibility are separate: a new
+registered model requires labels, offline validation, and retraining before it can
+be ML-routable. Unknown candidates fail explicitly.
+
+Build the ignored local artifact from frozen data with zero network calls:
+
+```sh
+python -m adaptive_llm_gateway.routing.train_predictor
+```
+
+This creates `metadata.json` and `predictor.pkl` under
+`artifacts/routing-quality/interaction-no-provider-pin-v1/`. Metadata records the
+format, formulation, schema and taxonomy versions, frozen hashes, row counts,
+supported candidates/categories, runtime versions, preprocessing identity, and
+SHA-256 checksum. Generated binaries remain ignored. Pickle loading is restricted
+to trusted application-owned build output; never pass uploads or downloaded files
+to the loader.
+
+The full-data fit uses 216 valid acceptable labels and excludes all eight missing
+labels. It performs no cross-validation, tuning, threshold selection, or training
+metric reporting. Generalization evidence remains the grouped OOF Phase 7 and
+Phase 8C-0 results. Phase 8C does not infer categories, select a threshold, connect
+automatic routing to `/v1/inference`, or change provider execution.
+
+## Phase 8D offline production path
+
+`RoutingDecisionService` is the thin domain boundary that extracts governed
+production features, predicts the supplied candidate batch once, computes canonical
+pre-generation projected costs, and delegates selection to the Phase 8A policy. The
+caller supplies candidates, a validated category, and a threshold. Unsupported
+candidates and missing categories fail explicitly.
+
+Validate the full-fit artifact integration locally with:
+
+```sh
+python -m adaptive_llm_gateway.routing.validate_production_path
+```
+
+The command checks all 56 Foundation V3 requests, four candidates, and the six
+frozen evaluation thresholds. Its ignored report is written to
+`artifacts/routing-validation/phase-8d-report.json`. These values diagnose
+integration with the final full-data artifact; they are not grouped OOF evidence or
+generalization estimates. Phase 8D chooses no production threshold, calls no model,
+writes no telemetry, and does not change `/v1/inference` or its required `model_id`.
 
 ### Offline and paid test commands
 

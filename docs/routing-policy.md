@@ -44,7 +44,7 @@ Feature Extractor
 RoutingRequestFeatures
     |
     v
-QualityPredictor [future Phase 8C]
+    SklearnQualityPredictor [Phase 8C, explicitly loaded]
     |
     v
 Candidate predictions
@@ -86,8 +86,9 @@ difficulty, errors, and other post-generation outcomes from entering the contrac
 
 ## Training/serving compatibility
 
-`TRAINING_SERVING_SKEW_AUDIT` covers every feature in the accepted Phase 7
-category/candidate interaction formulation:
+The historical Phase 8B `TRAINING_SERVING_SKEW_AUDIT` recorded every incompatibility
+in the accepted Phase 7 category/candidate interaction formulation before the
+Phase 8C correction:
 
 | Classification | Features |
 | --- | --- |
@@ -96,9 +97,96 @@ category/candidate interaction formulation:
 | `NOT_AVAILABLE_IN_PRODUCTION` | candidate-specific effective output allowance |
 | `EXPERIMENT_ONLY` | frozen upstream provider pin |
 
-The category difference is material: Phase 7 always had a category and called its
-structured category `json`; production uses `structured_json` and permits explicit
-absence. A future artifact adapter must map the legacy value or retrain with the
-production vocabulary. Phase 8C must also resolve absent-category behavior,
-candidate-specific output budgets, and the experimental provider-pin feature.
-Until then, directly loading the Phase 7 formulation would create unsafe skew.
+That audit prevented direct loading of the historical Phase 7 formulation. The
+following Phase 8C contract resolves every predictive incompatibility while
+preserving the historical audit for traceability.
+
+## Phase 8C canonical predictor
+
+Phase 8C resolves that skew with the approved `INTERACTION_NO_PROVIDER_PIN`
+formulation. The historical Phase 7 formulation remains unchanged. Provider pin is
+absent from the production schema, registry, preprocessing, artifact, and
+prediction inputs following the controlled Phase 8C-0 ablation.
+
+The version `1.0.0` `CanonicalQualityFeatures` contract contains canonical category,
+candidate identity, normalized reasoning effort, governed request measurements,
+requested and effective output allowances, configured prices, context window,
+code/structured-output indicators, and temperature capability. The shared matrix
+layer derives the category/candidate interaction. It excludes category provenance,
+Foundation difficulty, targets, evaluator data, response data, actual usage,
+latency, realized cost, errors, reasoning tokens, provider payloads, and ground
+truth.
+
+Training maps `json` to `structured_json`; production already uses
+`structured_json`. All other categories map directly. Production category absence
+raises `MissingRoutingCategoryError`. `CLIENT_HINT` and future `INFERRED` provenance
+values do not enter the vector, and Phase 8C does not infer categories.
+
+Structured output normalizes explicit benchmark configuration and the explicit
+internal production requirement to one boolean. Reasoning effort normalizes enum,
+string, and omitted values without model-slug rules. Effective output allowance is
+resolved from the request plus typed `ModelConfig.output_token_policy` category
+overrides. The resolver has no candidate-ID cases.
+
+The deterministic skew audit covers all 16 predictive fields: 11 are
+`EXACT_MATCH`, five are `CANONICALIZED_MATCH`, and zero are `UNRESOLVED`. Training
+and production adapters produce equal canonical objects and equal transformed
+vectors for all 224 frozen request/candidate rows.
+
+## Artifact and compatibility boundary
+
+Run the local, provider-free build:
+
+```sh
+python -m adaptive_llm_gateway.routing.train_predictor \
+  --root benchmark-results \
+  --output artifacts/routing-quality/interaction-no-provider-pin-v1
+```
+
+The build verifies frozen hashes and compatibility, excludes eight missing labels,
+fits the unchanged logistic-regression configuration on 216 valid labels, writes a
+versioned metadata document and checksummed sklearn pipeline, then reloads it for a
+prediction smoke test. Binary output is ignored by Git and is not downloaded or
+rebuilt automatically at startup.
+
+`SklearnQualityPredictor` validates trusted local metadata and checksum before
+unpickling the application-owned pipeline. It rejects missing, corrupt, or
+incompatible artifacts with typed failures. Python pickle is unsafe for untrusted
+input; the loader must never receive user uploads or arbitrary downloaded files.
+
+Artifact metadata records the four trained candidate identities. An arbitrary
+model may still be registered, but it cannot be predicted by this artifact.
+Unsupported identities raise `UnsupportedPredictorCandidateError`; collecting
+labels, grouped offline validation, and retraining are required before a new model
+becomes ML-routable.
+
+The predictor returns candidate-associated acceptability probabilities in input
+order. It does not choose a model, contain a quality threshold, call providers,
+write telemetry, or load Foundation data after artifact construction. The Phase 8A
+policy remains the only component that can combine probabilities, projected cost,
+and a caller-supplied threshold. No production threshold has been selected, and
+automatic routing remains disconnected from `/v1/inference`.
+
+The final full-data fit is deployment construction, not new generalization
+evidence. Scientific evidence remains the grouped OOF Phase 7 and Phase 8C-0
+experiments; training-set scores are neither generated nor reported as evidence.
+
+## Offline production-path composition
+
+Phase 8D adds `RoutingDecisionService`, which composes the existing extractor,
+predictor, canonical projected-cost calculation, and Phase 8A policy. The caller
+provides the candidate set and quality threshold; an optional upstream eligibility
+filter may narrow the set. Registry eligibility remains distinct from artifact
+compatibility, so an eligible model unknown to the loaded artifact fails explicitly.
+
+The service performs no provider request, response validation, escalation, category
+inference, threshold selection, HTTP integration, or telemetry write. It preserves
+the public requirement for an explicit `model_id` and is loaded only when explicitly
+constructed, keeping normal API startup independent of sklearn and local artifacts.
+
+The offline validator uses Foundation V3 only as a fixture source and compares the
+composed path with direct invocation of the same full-fit pipeline and Phase 8A
+policy. It checks probability and decision parity, repeatability, input-order
+independence, and threshold-set invariants. Its generated report is ignored. The
+reported selection and cost distributions describe full-fit integration behavior;
+they must not be interpreted as OOF quality or generalization evidence.

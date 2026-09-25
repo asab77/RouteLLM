@@ -43,6 +43,26 @@ class ModelCapabilities(DomainModel):
     reasoning: ReasoningBehavior = ReasoningBehavior.UNSUPPORTED
 
 
+class CategoryOutputTokenAllowance(DomainModel):
+    """Optional pre-generation output allowance for one canonical category."""
+
+    category: Identifier
+    max_output_tokens: PositiveTokenCount
+
+
+class OutputTokenPolicy(DomainModel):
+    """Typed routing-time output allowances independent of model identity."""
+
+    category_overrides: tuple[CategoryOutputTokenAllowance, ...] = ()
+
+    @model_validator(mode="after")
+    def category_overrides_are_unique(self) -> "OutputTokenPolicy":
+        categories = [item.category for item in self.category_overrides]
+        if len(categories) != len(set(categories)):
+            raise ValueError("output-token category overrides must be unique")
+        return self
+
+
 class ModelConfig(DomainModel):
     """Public model metadata. Prices are USD per one million tokens."""
 
@@ -55,6 +75,7 @@ class ModelConfig(DomainModel):
     enabled: bool = Field(default=True, strict=True)
     capabilities: ModelCapabilities = Field(default_factory=ModelCapabilities)
     reasoning_effort: ReasoningEffort | None = None
+    output_token_policy: OutputTokenPolicy = Field(default_factory=OutputTokenPolicy)
 
     @model_validator(mode="after")
     def reject_unsupported_reasoning_effort(self) -> "ModelConfig":

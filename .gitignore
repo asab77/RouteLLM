@@ -30,3 +30,5 @@ temp/
 docker/postgres/data/
 
 benchmark-results/
+artifacts/routing-quality/
+artifacts/routing-validation/

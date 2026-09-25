@@ -64,3 +64,51 @@ class InvalidQualityThresholdError(RoutingPolicyError):
 
 class DuplicateCandidatePredictionError(RoutingPolicyError):
     """More than one prediction was supplied for a model identifier."""
+
+
+class QualityPredictorError(RuntimeError):
+    """A deployable quality predictor could not safely serve a request."""
+
+
+class PredictorInputCompatibilityError(QualityPredictorError, ValueError):
+    """Request or candidate input is outside the fitted artifact contract."""
+
+
+class MissingRoutingCategoryError(PredictorInputCompatibilityError):
+    """The learned predictor requires an explicit canonical category."""
+
+
+class UnsupportedPredictorCandidateError(PredictorInputCompatibilityError):
+    """A candidate identity was not represented during artifact training."""
+
+
+class PredictorArtifactError(QualityPredictorError):
+    """Trusted predictor build output is missing, damaged, or incompatible."""
+
+
+class PredictorArtifactNotFoundError(PredictorArtifactError, FileNotFoundError):
+    """Required predictor metadata or binary output does not exist."""
+
+
+class CorruptPredictorArtifactError(PredictorArtifactError):
+    """Predictor metadata or serialized pipeline cannot be decoded safely."""
+
+
+class IncompatibleArtifactFormatError(PredictorArtifactError):
+    """Predictor artifact format is not supported by this application."""
+
+
+class IncompatiblePredictorFormulationError(PredictorArtifactError):
+    """Artifact uses a different learned formulation."""
+
+
+class IncompatibleFeatureSchemaError(PredictorArtifactError):
+    """Artifact canonical feature schema is incompatible."""
+
+
+class IncompatibleCategoryTaxonomyError(PredictorArtifactError):
+    """Artifact category taxonomy is incompatible."""
+
+
+class PredictorArtifactChecksumError(PredictorArtifactError):
+    """Serialized predictor bytes do not match trusted metadata."""

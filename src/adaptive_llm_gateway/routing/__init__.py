@@ -22,6 +22,17 @@ _FEATURE_EXPORTS = {
     "RoutingCategory",
     "TRAINING_SERVING_SKEW_AUDIT",
 }
+_QUALITY_FEATURE_EXPORTS = {
+    "CANONICAL_PREDICTIVE_FEATURES",
+    "CANONICAL_QUALITY_FEATURE_SCHEMA_VERSION",
+    "CANONICAL_TRAINING_SERVING_AUDIT",
+    "CanonicalQualityFeatures",
+}
+_PREDICTOR_EXPORTS = {
+    "QualityPredictorArtifactMetadata",
+    "SklearnQualityPredictor",
+}
+_SERVICE_EXPORTS = {"RoutingDecisionService"}
 _ANALYSIS_EXPORTS = {
     "ALWAYS_CHEAPEST",
     "ALWAYS_STRONGEST",
@@ -37,7 +48,10 @@ _ANALYSIS_EXPORTS = {
     "load_frozen_foundation_v3",
 }
 
-__all__ = sorted(_POLICY_EXPORTS | _FEATURE_EXPORTS | _ANALYSIS_EXPORTS)
+__all__ = sorted(
+    _POLICY_EXPORTS | _FEATURE_EXPORTS | _QUALITY_FEATURE_EXPORTS
+    | _PREDICTOR_EXPORTS | _SERVICE_EXPORTS | _ANALYSIS_EXPORTS
+)
 
 
 def __getattr__(name: str):
@@ -46,6 +60,12 @@ def __getattr__(name: str):
         return getattr(import_module(".policy", __name__), name)
     if name in _FEATURE_EXPORTS:
         return getattr(import_module(".features", __name__), name)
+    if name in _QUALITY_FEATURE_EXPORTS:
+        return getattr(import_module(".quality_features", __name__), name)
+    if name in _PREDICTOR_EXPORTS:
+        return getattr(import_module(".predictor", __name__), name)
+    if name in _SERVICE_EXPORTS:
+        return getattr(import_module(".service", __name__), name)
     if name in _ANALYSIS_EXPORTS:
         return getattr(import_module(".analysis", __name__), name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

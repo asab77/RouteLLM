@@ -2,7 +2,8 @@
 import os
 from pydantic import BaseModel, ConfigDict, Field, SecretStr
 from adaptive_llm_gateway.models import (
-    ModelCapabilities, ModelConfig, ReasoningBehavior, ReasoningEffort,
+    CategoryOutputTokenAllowance, ModelCapabilities, ModelConfig,
+    OutputTokenPolicy, ReasoningBehavior, ReasoningEffort,
 )
 
 
@@ -64,7 +65,11 @@ CANDIDATE_MODELS = (
                 capabilities=ModelCapabilities(supports_temperature=True,
                     supports_structured_output=True,
                     reasoning=ReasoningBehavior.PROVIDER_DEFAULT),
-                reasoning_effort=ReasoningEffort.LOW),
+                reasoning_effort=ReasoningEffort.LOW,
+                output_token_policy=OutputTokenPolicy(category_overrides=(
+                    CategoryOutputTokenAllowance(
+                        category="reasoning", max_output_tokens=256),
+                ))),
     ModelConfig(model_id="candidate-claude-sonnet-5", provider="vercel",
                 provider_model_name="anthropic/claude-sonnet-5",
                 input_cost_per_1m_tokens="2.00", output_cost_per_1m_tokens="10.00",

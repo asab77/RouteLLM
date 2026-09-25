@@ -1,10 +1,13 @@
 """Public domain schemas; no provider SDK dependencies."""
 
 from .schemas import (
-    InferenceRequest, InferenceResponse, ModelCapabilities, ModelConfig, ReasoningBehavior, ReasoningEffort,
+    CategoryOutputTokenAllowance, InferenceRequest, InferenceResponse,
+    ModelCapabilities, ModelConfig, OutputTokenPolicy, ReasoningBehavior,
+    ReasoningEffort,
 )
 
 __all__ = [
-    "InferenceRequest", "InferenceResponse", "ModelCapabilities", "ModelConfig",
+    "CategoryOutputTokenAllowance", "InferenceRequest", "InferenceResponse",
+    "ModelCapabilities", "ModelConfig", "OutputTokenPolicy",
     "ReasoningBehavior", "ReasoningEffort",
 ]
