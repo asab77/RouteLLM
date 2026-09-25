@@ -5,12 +5,13 @@ cheaper models may be sufficient. The long-term goal is an adaptive inference
 gateway that selects the lowest-cost model predicted to satisfy a configurable
 quality requirement.
 
-**Current status: Phase 5.5C complete by human review; Phase 6 is not implemented.**
+**Current status: Phase 7 offline router validation is complete; the Phase 8A
+production policy core is ready for review but is not integrated with inference.**
 RouteLLM owns model definitions, explicit model selection, Decimal cost estimates,
 and PostgreSQL production telemetry. Vercel AI Gateway provides model access only.
 A separate controlled benchmark runner produces experimental artifacts, and an
 offline evaluator derives versioned quality measurements from stored responses.
-Intelligent routing and escalation are not implemented.
+Automated inference routing and escalation are not integrated.
 
 ## Install and run
 
@@ -192,6 +193,7 @@ src/adaptive_llm_gateway/
   benchmarks/   Dataset schemas, sequential runner, atomic file repository, CLI
                 plus request-derived feature extraction and V2 validation
   evaluation/   Deterministic category evaluators, aggregation, file repository, CLI
+  routing/      Offline experiments plus provider-independent policy boundaries
   application/  Inference orchestration and best-effort telemetry lifecycle
   telemetry/    Storage-independent event/repository contracts and query service
   persistence/  Environment settings, async engine, ORM model, PostgreSQL repository
@@ -230,6 +232,10 @@ schema. The registry preserves insertion order and rejects duplicate IDs.
 Cost is `(input_tokens * input_rate + output_tokens * output_rate) / 1_000_000`.
 Pricing reserves sufficient Decimal precision without rounding; persistence copies
 the result without recalculation.
+
+The production routing boundary and its separation from offline experiments are
+documented in [`docs/routing-policy.md`](docs/routing-policy.md). It is not yet
+connected to `/v1/inference`.
 
 ## Telemetry schema and lifecycle
 

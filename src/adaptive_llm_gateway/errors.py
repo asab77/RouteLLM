@@ -48,3 +48,19 @@ class EvaluationNotFoundError(FileNotFoundError):
 
 class EvaluationArtifactError(ValueError):
     """A benchmark artifact is malformed, inconsistent, or incomplete."""
+
+
+class RoutingPolicyError(ValueError):
+    """The cost-aware routing policy received an invalid selection request."""
+
+
+class NoEligibleCandidatesError(RoutingPolicyError):
+    """No eligible model was supplied to the routing policy."""
+
+
+class InvalidQualityThresholdError(RoutingPolicyError):
+    """The caller supplied a non-finite threshold outside [0, 1]."""
+
+
+class DuplicateCandidatePredictionError(RoutingPolicyError):
+    """More than one prediction was supplied for a model identifier."""

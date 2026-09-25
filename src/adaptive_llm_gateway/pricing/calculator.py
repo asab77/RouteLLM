@@ -30,3 +30,19 @@ def calculate_cost(
         return (
             rates[0] * input_tokens + rates[1] * output_tokens
         ) / Decimal(1_000_000)
+
+
+def calculate_projected_cost(
+    *, approximate_input_tokens: int, effective_max_output_tokens: int,
+    model: ModelConfig,
+) -> Decimal:
+    """Return the exact pre-generation upper-bound estimate used for routing.
+
+    Projected cost deliberately uses request-visible token estimates and the
+    configured output allowance. It never depends on realized generation data.
+    """
+    return calculate_cost(
+        input_tokens=approximate_input_tokens,
+        output_tokens=effective_max_output_tokens,
+        model=model,
+    )
