@@ -7,7 +7,7 @@ from decimal import Decimal
 from enum import StrEnum
 from typing import Annotated, Iterable, Protocol, Sequence, runtime_checkable
 
-from pydantic import Field, StringConstraints, field_validator
+from pydantic import Field, field_validator
 
 from adaptive_llm_gateway.errors import (
     DuplicateCandidatePredictionError,
@@ -16,12 +16,9 @@ from adaptive_llm_gateway.errors import (
 )
 from adaptive_llm_gateway.models import ModelConfig
 from adaptive_llm_gateway.models.schemas import DomainModel, Identifier, Money
+from adaptive_llm_gateway.routing.features import RoutingRequestFeatures
 
 Probability = Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]
-CategorySignal = Annotated[
-    str,
-    StringConstraints(strip_whitespace=True, min_length=1, max_length=100),
-]
 
 
 def _validated_probability(value: object, *, field_name: str) -> float:
@@ -31,24 +28,6 @@ def _validated_probability(value: object, *, field_name: str) -> float:
     if not math.isfinite(result) or not 0 <= result <= 1:
         raise ValueError(f"{field_name} must be a finite number between 0 and 1")
     return result
-
-
-class RoutingRequestFeatures(DomainModel):
-    """Governed request-visible inputs available before candidate selection.
-
-    Category is an optional boundary only. This type makes no choice about
-    whether a future value comes from a client hint or a pre-routing component.
-    """
-
-    category: CategorySignal | None = None
-    prompt_characters: int = Field(ge=0, strict=True)
-    system_prompt_characters: int = Field(ge=0, strict=True)
-    approximate_input_tokens: int = Field(ge=0, strict=True)
-    contains_code: bool = Field(strict=True)
-    requests_structured_output: bool = Field(strict=True)
-    max_output_tokens: int = Field(gt=0, strict=True)
-    constraint_indicator_count: int = Field(ge=0, strict=True)
-    reasoning_indicator_count: int = Field(ge=0, strict=True)
 
 
 class ModelAcceptabilityPrediction(DomainModel):

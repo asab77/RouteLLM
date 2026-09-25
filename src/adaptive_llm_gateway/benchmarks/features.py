@@ -1,9 +1,14 @@
-import re
-
 from pydantic import Field
 
 from adaptive_llm_gateway.models import InferenceRequest
 from adaptive_llm_gateway.models.schemas import DomainModel
+from adaptive_llm_gateway.routing.features import (
+    approximate_input_tokens,
+    constraint_indicator_count,
+    reasoning_indicator_count,
+    request_text,
+    text_contains_code,
+)
 
 
 class RequestFeatures(DomainModel):
@@ -18,27 +23,18 @@ class RequestFeatures(DomainModel):
     reasoning_indicator_count: int = Field(ge=0)
 
 
-_CONSTRAINTS = re.compile(r"\b(?:must|only|exactly|exclude|include|return|output|do not|at most|no more than)\b", re.I)
-_REASONING = re.compile(r"\b(?:infer|determine|deduce|calculate|after|before|unless|if|therefore)\b", re.I)
-_CODE = re.compile(
-    r"\x60{3}|\bpython code\b|\bdef\s+\w+\s*\(|\bdefin(?:e|ing)\s+\w+\s*\(|"
-    r"\bfunction\s+\w+\s*\(|\bclass\s+\w+",
-    re.I,
-)
-
-
 def extract_request_features(request: InferenceRequest) -> RequestFeatures:
     """Derive only information available before model selection."""
-    text = " ".join(part for part in (request.system_prompt, request.prompt) if part)
+    text = request_text(request)
     output_type = getattr(request, "expected_output_type", "text")
     return RequestFeatures(
         category=getattr(request, "category", None),
         prompt_characters=len(request.prompt),
         system_prompt_characters=len(request.system_prompt or ""),
-        approximate_input_tokens=len(text.split()),
-        contains_code=bool(_CODE.search(text)),
+        approximate_input_tokens=approximate_input_tokens(request),
+        contains_code=text_contains_code(text),
         requests_structured_output=output_type in {"json", "code"},
         max_output_tokens=request.max_output_tokens,
-        constraint_indicator_count=len(_CONSTRAINTS.findall(text)),
-        reasoning_indicator_count=len(_REASONING.findall(text)),
+        constraint_indicator_count=constraint_indicator_count(text),
+        reasoning_indicator_count=reasoning_indicator_count(text),
     )

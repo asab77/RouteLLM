@@ -12,6 +12,16 @@ _POLICY_EXPORTS = {
     "RoutingDecisionReason",
     "RoutingRequestFeatures",
 }
+_FEATURE_EXPORTS = {
+    "CategoryProvenance",
+    "FeatureCompatibilityStatus",
+    "FORBIDDEN_ROUTING_FEATURES",
+    "PRODUCTION_FEATURE_GOVERNANCE",
+    "ProductionRequestFeatureExtractor",
+    "ROUTING_CATEGORY_TAXONOMY_VERSION",
+    "RoutingCategory",
+    "TRAINING_SERVING_SKEW_AUDIT",
+}
 _ANALYSIS_EXPORTS = {
     "ALWAYS_CHEAPEST",
     "ALWAYS_STRONGEST",
@@ -27,13 +37,15 @@ _ANALYSIS_EXPORTS = {
     "load_frozen_foundation_v3",
 }
 
-__all__ = sorted(_POLICY_EXPORTS | _ANALYSIS_EXPORTS)
+__all__ = sorted(_POLICY_EXPORTS | _FEATURE_EXPORTS | _ANALYSIS_EXPORTS)
 
 
 def __getattr__(name: str):
     """Keep experiment dependencies out of production imports until requested."""
     if name in _POLICY_EXPORTS:
         return getattr(import_module(".policy", __name__), name)
+    if name in _FEATURE_EXPORTS:
+        return getattr(import_module(".features", __name__), name)
     if name in _ANALYSIS_EXPORTS:
         return getattr(import_module(".analysis", __name__), name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

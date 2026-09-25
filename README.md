@@ -5,8 +5,8 @@ cheaper models may be sufficient. The long-term goal is an adaptive inference
 gateway that selects the lowest-cost model predicted to satisfy a configurable
 quality requirement.
 
-**Current status: Phase 7 offline router validation is complete; the Phase 8A
-production policy core is ready for review but is not integrated with inference.**
+**Current status: Phase 8A is complete; the Phase 8B production request-feature
+and category contract is ready for review but is not integrated with inference.**
 RouteLLM owns model definitions, explicit model selection, Decimal cost estimates,
 and PostgreSQL production telemetry. Vercel AI Gateway provides model access only.
 A separate controlled benchmark runner produces experimental artifacts, and an
