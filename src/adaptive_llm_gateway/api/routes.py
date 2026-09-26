@@ -4,11 +4,14 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Request
 
 from adaptive_llm_gateway.application.service import InferenceService
+from adaptive_llm_gateway.application.adaptive_config import AdaptiveRuntime
 from adaptive_llm_gateway.telemetry.query import TelemetryQueryService
 from adaptive_llm_gateway.evaluation.service import EvaluationService
 
-from .dependencies import get_evaluation_service, get_service
+from .dependencies import get_adaptive_runtime, get_evaluation_service, get_service
 from .schemas import (
+    AdaptiveInferencePayload,
+    AdaptiveInferenceResult,
     ErrorResponse,
     HealthResponse,
     InferencePayload,
@@ -17,11 +20,13 @@ from .schemas import (
     MetricsSummary,
     BenchmarkEvaluationSummary,
     PublicModel,
+    PublicRoutingMetadata,
 )
 
 router = APIRouter()
 Service = Annotated[InferenceService, Depends(get_service)]
 Evaluation = Annotated[EvaluationService, Depends(get_evaluation_service)]
+Adaptive = Annotated[AdaptiveRuntime, Depends(get_adaptive_runtime)]
 
 
 @router.get("/health", response_model=HealthResponse, tags=["health"])
@@ -51,6 +56,37 @@ async def list_models(service: Service) -> ModelList:
 async def inference(payload: InferencePayload, request: Request, service: Service) -> InferenceResult:
     result = await service.generate(payload.model_id, payload.to_domain(), request_id=request.state.request_id)
     return InferenceResult(**result.model_dump(), request_id=request.state.request_id)
+
+
+@router.post(
+    "/v1/inference/adaptive",
+    response_model=AdaptiveInferenceResult,
+    tags=["inference"],
+    responses={status: {"model": ErrorResponse} for status in (400, 403, 404, 422, 429, 502, 503, 504)},
+)
+async def adaptive_inference(
+    payload: AdaptiveInferencePayload,
+    request: Request,
+    runtime: Adaptive,
+) -> AdaptiveInferenceResult:
+    result = await runtime.service.generate(
+        payload.to_domain(),
+        category=payload.category,
+        quality_threshold=payload.quality_threshold,
+        candidate_model_ids=runtime.candidate_model_ids,
+        request_id=request.state.request_id,
+    )
+    decision = result.routing_decision
+    return AdaptiveInferenceResult(
+        **result.response.model_dump(),
+        request_id=request.state.request_id,
+        routing=PublicRoutingMetadata(
+            selected_model_id=decision.selected_model_id,
+            threshold_satisfied=decision.threshold_satisfied,
+            fallback_used=decision.fallback_used,
+            reason=decision.reason,
+        ),
+    )
 
 
 @router.get("/v1/metrics/summary", response_model=MetricsSummary, tags=["metrics"],

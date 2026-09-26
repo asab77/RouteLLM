@@ -30,6 +30,14 @@ def _validated_probability(value: object, *, field_name: str) -> float:
     return result
 
 
+def validate_quality_threshold(value: object) -> float:
+    """Apply the single Phase 8A threshold contract at every input boundary."""
+    try:
+        return _validated_probability(value, field_name="quality_threshold")
+    except ValueError as exc:
+        raise InvalidQualityThresholdError(str(exc)) from exc
+
+
 class ModelAcceptabilityPrediction(DomainModel):
     """One predictor output, separate from model pricing and policy."""
 
@@ -101,12 +109,7 @@ class CostAwareRoutingPolicy:
         if not candidate_list:
             raise NoEligibleCandidatesError("at least one eligible candidate is required")
 
-        try:
-            threshold = _validated_probability(
-                quality_threshold, field_name="quality_threshold"
-            )
-        except ValueError as exc:
-            raise InvalidQualityThresholdError(str(exc)) from exc
+        threshold = validate_quality_threshold(quality_threshold)
 
         candidate_ids = [candidate.model_id for candidate in candidate_list]
         if len(set(candidate_ids)) != len(candidate_ids):

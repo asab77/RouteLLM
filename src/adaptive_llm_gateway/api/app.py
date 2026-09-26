@@ -14,14 +14,25 @@ from starlette.exceptions import HTTPException
 from starlette.responses import Response
 
 from adaptive_llm_gateway.application.service import InferenceService
+from adaptive_llm_gateway.application.adaptive_config import (
+    AdaptiveRoutingConfig,
+    AdaptiveRuntime,
+    build_adaptive_runtime,
+)
 from adaptive_llm_gateway.bootstrap import create_development_service
 from adaptive_llm_gateway.errors import (
     ContextLimitError,
+    AdaptiveRoutingUnavailableError,
     GatewayError,
     GatewayErrorCategory,
     ModelDisabledError,
     ProviderFailureError,
     ProviderUnavailableError,
+    InvalidQualityThresholdError,
+    MissingRoutingCategoryError,
+    NoEligibleCandidatesError,
+    PredictorArtifactError,
+    UnsupportedPredictorCandidateError,
 )
 from adaptive_llm_gateway.registry import ModelNotFoundError
 from adaptive_llm_gateway.runtime import application_service
@@ -34,6 +45,12 @@ from .schemas import ErrorDetail, ErrorResponse
 
 _REQUEST_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 _ERRORS = {
+    AdaptiveRoutingUnavailableError: (503, "adaptive_routing_unavailable", "Adaptive inference is not configured."),
+    PredictorArtifactError: (503, "adaptive_routing_unavailable", "Adaptive inference is unavailable."),
+    UnsupportedPredictorCandidateError: (503, "adaptive_routing_unavailable", "Adaptive inference is unavailable."),
+    NoEligibleCandidatesError: (503, "adaptive_routing_unavailable", "Adaptive inference is unavailable."),
+    InvalidQualityThresholdError: (422, "invalid_adaptive_request", "The adaptive routing request is invalid."),
+    MissingRoutingCategoryError: (422, "invalid_adaptive_request", "The adaptive routing request is invalid."),
     EvaluationNotFoundError: (404, "evaluation_not_found", "The benchmark evaluation was not found."),
     EvaluationArtifactError: (422, "evaluation_artifact_invalid", "The benchmark evaluation artifact is invalid."),
     TelemetryUnavailableError: (503, "telemetry_unavailable", "Telemetry is currently unavailable."),
@@ -52,7 +69,10 @@ def error_response(request: Request, status: int, code: str, message: str) -> JS
                         headers={"X-Request-ID": request.state.request_id})
 
 
-def create_app(service: InferenceService | None = None) -> FastAPI:
+def create_app(
+    service: InferenceService | None = None,
+    adaptive_runtime: AdaptiveRuntime | None = None,
+) -> FastAPI:
     @asynccontextmanager
     async def lifespan(application: FastAPI):
         if service is not None:
@@ -60,15 +80,20 @@ def create_app(service: InferenceService | None = None) -> FastAPI:
         else:
             async with application_service() as configured_service:
                 application.state.inference_service = configured_service
+                config = AdaptiveRoutingConfig.from_environment()
+                application.state.adaptive_runtime = build_adaptive_runtime(
+                    configured_service, config
+                )
                 yield
 
     app = FastAPI(
         title="Adaptive LLM Gateway",
         version="0.5.5",
-        description="Phase 5.5A: stronger offline benchmarks and honest incomplete-evaluation status. Routing is deferred.",
+        description="Explicit inference plus optional configured adaptive routing through one provider-execution path.",
         lifespan=lifespan,
     )
     app.state.inference_service = service if service is not None else create_development_service()
+    app.state.adaptive_runtime = adaptive_runtime
     app.state.evaluation_service = EvaluationService(
         Path(os.environ.get("BENCHMARK_RESULTS_DIR", "benchmark-results")))
 

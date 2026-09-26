@@ -19,6 +19,10 @@ class ProviderFailureError(RuntimeError):
     """An adapter failed to construct or generate a valid result."""
 
 
+class AdaptiveRoutingUnavailableError(RuntimeError):
+    """Adaptive inference is not configured for this application instance."""
+
+
 
 class GatewayErrorCategory(StrEnum):
     NOT_CONFIGURED = "gateway_not_configured"

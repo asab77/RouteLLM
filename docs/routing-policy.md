@@ -190,3 +190,72 @@ policy. It checks probability and decision parity, repeatability, input-order
 independence, and threshold-set invariants. Its generated report is ignored. The
 reported selection and cost distributions describe full-fit integration behavior;
 they must not be interpreted as OOF quality or generalization evidence.
+
+## Adaptive runtime integration
+
+Phase 8E introduces an internal `AdaptiveInferenceService`. It receives an inference
+request, explicit routing category, explicit quality threshold, and caller-selected
+candidate IDs. It resolves those IDs through the existing registry, invokes
+`RoutingDecisionService` once, and passes the resulting `selected_model_id` to the
+existing `InferenceService.generate` method.
+
+This convergence preserves one provider-execution implementation. Explicit mode
+continues to call `InferenceService.generate` with its requested model directly;
+adaptive mode supplies the router-selected model to the same method. Provider
+resolution, normalized provider errors, actual usage and cost, and existing
+inference telemetry therefore retain their established behavior.
+
+The adaptive result holds the `InferenceResponse` and unchanged `RoutingDecision`
+as separate typed values. Projected pre-generation routing cost is not replaced by
+realized response cost. Routing failures occur before provider execution. A provider
+failure after selection is propagated through existing semantics and never triggers
+another candidate.
+
+Artifact construction requires an explicit trusted local directory. Nothing is
+downloaded, trained, or rebuilt during ordinary startup, and the explicit API does
+not import sklearn. The current artifact recognizes four trained candidate
+identities; additional registry models require new labels, grouped validation, and
+retraining before adaptive use.
+
+There is no adaptive HTTP endpoint in Phase 8E. Category and quality threshold are
+caller supplied with no defaults, and the public design for candidate selection and
+artifact configuration remains deferred. Response validation, escalation, category
+inference, threshold selection, and routing-specific telemetry persistence are also
+outside this phase.
+
+## Adaptive HTTP and runtime configuration
+
+Phase 8F adds `POST /v1/inference/adaptive` while leaving
+`POST /v1/inference` unchanged. The adaptive request reuses the existing inference
+fields and requires an explicit canonical category and quality threshold. It never
+accepts candidate IDs, an artifact path, provider choice, predictor metadata, or
+benchmark fields.
+
+The gateway-owned portfolio is configured using
+`ROUTELLM_ADAPTIVE_ARTIFACT_PATH` and `ROUTELLM_ADAPTIVE_CANDIDATES`. Both blank or
+absent means disabled. Both non-empty means enabled. Any partial configuration,
+empty comma-separated item, duplicate ID, unknown registry model, unavailable model,
+or artifact incompatibility fails application construction. Candidate whitespace is
+stripped deterministically and order is retained. There is no threshold or category
+in process configuration.
+
+Configured startup loads the trusted application-owned artifact once, constructs a
+single `RoutingDecisionService` and `AdaptiveInferenceService`, and reuses them for
+requests. It performs no download, build, training, or Foundation access. Disabled
+startup returns before importing sklearn or adaptive implementation modules. A call
+to the disabled adaptive endpoint returns a sanitized `503`
+`adaptive_routing_unavailable` response; explicit inference remains available.
+
+The public response returns the normal realized inference result plus selected model
+ID, threshold/fallback state, and routing reason. Predicted probabilities, candidate
+rankings, projected cost, artifact paths, feature vectors, coefficients, and
+benchmark metadata remain internal. Internally, the complete `RoutingDecision`
+continues to preserve projected pre-generation cost separately from realized
+response cost.
+
+Both HTTP paths converge on `InferenceService.generate`, so provider resolution,
+execution, actual telemetry, and error handling are shared. Existing telemetry gains
+no routing fields or migration. Provider failure triggers no second candidate.
+Category inference, a production threshold default, response validation, quality
+escalation, and quality-based retry remain unimplemented. Phase 7 and Phase 8C-0 OOF
+results remain distinct from full-fit artifact and runtime integration behavior.

@@ -5,14 +5,15 @@ cheaper models may be sufficient. The long-term goal is an adaptive inference
 gateway that selects the lowest-cost model predicted to satisfy a configurable
 quality requirement.
 
-**Current status: Phase 8D composes the versioned quality predictor and cost-aware
-policy behind an offline-only routing service. It remains intentionally disconnected
-from public inference and provider execution.**
+**Current status: Phase 8F exposes optional adaptive inference through a configured
+HTTP endpoint while preserving the existing explicit-model endpoint and shared
+provider-execution path.**
 RouteLLM owns model definitions, explicit model selection, Decimal cost estimates,
 and PostgreSQL production telemetry. Vercel AI Gateway provides model access only.
 A separate controlled benchmark runner produces experimental artifacts, and an
 offline evaluator derives versioned quality measurements from stored responses.
-Automated inference routing and escalation are not integrated.
+Adaptive routing is opt-in through trusted runtime configuration. Post-generation
+validation and escalation are not integrated.
 
 ## Install and run
 
@@ -705,6 +706,77 @@ frozen evaluation thresholds. Its ignored report is written to
 integration with the final full-data artifact; they are not grouped OOF evidence or
 generalization estimates. Phase 8D chooses no production threshold, calls no model,
 writes no telemetry, and does not change `/v1/inference` or its required `model_id`.
+
+## Phase 8E adaptive runtime service
+
+The application layer now supports two paths that converge on the same
+`InferenceService.generate` execution method:
+
+```text
+Explicit: request + model_id -> InferenceService -> provider
+
+Adaptive: request + category + threshold + candidate IDs
+          -> RoutingDecisionService
+          -> selected model_id
+          -> InferenceService -> provider
+```
+
+`AdaptiveInferenceService` loads a trusted local predictor only when explicitly
+constructed with an artifact directory. It never downloads or builds an artifact at
+startup. Candidate IDs are caller supplied and resolved to canonical configurations
+through the existing model registry; unsupported predictor candidates fail rather
+than being dropped.
+
+Category and threshold remain required caller inputs. There is no category
+inference, production threshold default, response validation, escalation, retry to a
+second model, or routing-specific telemetry persistence. Existing telemetry records
+the model that actually executes and keeps realized response cost separate from the
+projected cost retained in the internal routing result. The generated predictor
+artifact remains ignored and untracked.
+
+Phase 8E did not add an adaptive HTTP endpoint. The existing
+`POST /v1/inference` continues to require `model_id` and does not import or construct
+adaptive components.
+
+## Phase 8F adaptive HTTP configuration
+
+The public endpoints are:
+
+- `POST /v1/inference`: explicit mode; `model_id` remains required.
+- `POST /v1/inference/adaptive`: adaptive mode; `category` and
+  `quality_threshold` are required on every request.
+
+Clients describe request intent and never submit candidate IDs, artifact paths,
+providers, predictor versions, features, or benchmark fields. RouteLLM owns the
+candidate portfolio through trusted process configuration:
+
+```env
+ROUTELLM_ADAPTIVE_ARTIFACT_PATH=artifacts/routing-quality/interaction-no-provider-pin-v1
+ROUTELLM_ADAPTIVE_CANDIDATES=candidate-nemotron-3.5-lightning,candidate-gpt-6-luna,candidate-gemini-3-flash,candidate-claude-sonnet-5
+```
+
+Leave both variables blank or unset to disable adaptive routing. Supplying only one,
+an empty candidate entry, duplicates, unknown registry IDs, unavailable models, or
+artifact-incompatible candidates causes fail-fast configuration failure. Candidate
+whitespace is stripped and input order is preserved. The artifact is loaded and
+validated once during configured application startup; it is never downloaded,
+trained, or rebuilt there.
+
+When adaptive routing is disabled, the adaptive endpoint returns a sanitized `503`
+with code `adaptive_routing_unavailable`; explicit inference continues normally and
+does not import sklearn. The adaptive response contains the ordinary inference
+fields and a small `routing` object with selected model ID, threshold-satisfied and
+fallback flags, and routing reason. It does not expose probabilities, projected
+cost, candidate rankings, artifact details, or feature values. Projected cost
+remains internal and distinct from the response's realized estimated cost.
+
+Category remains one of the seven current routing taxonomy values, supplied by the
+caller. Quality threshold uses the Phase 8A inclusive `[0, 1]` contract and has no
+production default. The current artifact recognizes its four trained candidate
+identities; portfolio expansion requires labels, grouped validation, and retraining.
+Full-fit runtime behavior is integration behavior, while Phase 7 and Phase 8C-0 OOF
+results remain the generalization evidence. Phase 8F adds no response validation,
+escalation, second-model retry, or routing-specific telemetry persistence.
 
 ### Offline and paid test commands
 

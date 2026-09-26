@@ -15,6 +15,8 @@ def isolate_database_environment(monkeypatch, request):
     monkeypatch.delenv("AI_GATEWAY_TIMEOUT_SECONDS", raising=False)
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.delenv("TELEMETRY_TIMEOUT_SECONDS", raising=False)
+    monkeypatch.delenv("ROUTELLM_ADAPTIVE_ARTIFACT_PATH", raising=False)
+    monkeypatch.delenv("ROUTELLM_ADAPTIVE_CANDIDATES", raising=False)
 
 
 @pytest.fixture
